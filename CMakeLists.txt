@@ -4,8 +4,8 @@ project(Client-Server)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_subdirectory(Server)
-add_subdirectory(Client)
-
 add_executable(main main.cpp)
+
+add_subdirectory(Client)
+add_subdirectory(Server)
 

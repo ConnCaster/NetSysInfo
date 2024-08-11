@@ -1,0 +1,9 @@
+/home/user/Projects/C++/Client-Server/cmake-build-debug/CMakeFiles/main.dir
+/home/user/Projects/C++/Client-Server/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/user/Projects/C++/Client-Server/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/user/Projects/C++/Client-Server/cmake-build-debug/Client/CMakeFiles/start_client.dir
+/home/user/Projects/C++/Client-Server/cmake-build-debug/Client/CMakeFiles/edit_cache.dir
+/home/user/Projects/C++/Client-Server/cmake-build-debug/Client/CMakeFiles/rebuild_cache.dir
+/home/user/Projects/C++/Client-Server/cmake-build-debug/Server/CMakeFiles/start_server.dir
+/home/user/Projects/C++/Client-Server/cmake-build-debug/Server/CMakeFiles/edit_cache.dir
+/home/user/Projects/C++/Client-Server/cmake-build-debug/Server/CMakeFiles/rebuild_cache.dir
