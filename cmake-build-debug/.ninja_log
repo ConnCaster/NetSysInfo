@@ -1,5 +1,0 @@
-# ninja log v5
-429	503	1723484332614790104	Server/start_server	66f53f6509ac8af3
-474	548	1723484337758207792	Client/start_client	b14bec985a3cac33
-1	474	1723484337684873256	Client/CMakeFiles/start_client.dir/client.cpp.o	acaf59f14d9836b2
-1	428	1723484332541455569	Server/CMakeFiles/start_server.dir/server.cpp.o	837da18912fe919a
