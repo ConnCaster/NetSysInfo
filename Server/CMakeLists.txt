@@ -1,4 +1,4 @@
-find_package(nlohmann_json PATHS "/home/user/Projects/C++/Client-Server/lib/include")
+#find_package(nlohmann_json PATHS "/home/user/Projects/C++/Client-Server/lib/include")
 
 add_executable(start_server server.cpp
         include/server.h)

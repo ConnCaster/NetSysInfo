@@ -87,7 +87,8 @@ inline int start_server() {
         if (const ssize_t received = recv(client_socket, buffer, 64, 0); received <= 0) {
             std::cerr << m_time() << "[ERROR] Error recv()" << std::endl;
         }
-        std::cout << m_time() << "[CLIENT] " << buffer << std::endl;
+
+        std::cout << m_time() << "[CLIENT] " <<  buffer << std::endl;
     }
     return 0;
 }
