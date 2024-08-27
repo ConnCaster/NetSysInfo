@@ -4,7 +4,7 @@
 #include <sys/socket.h>    // Для использования Socket()
 #include <netinet/in.h>    // Для использования sockaddr_in
 #include <ctime>           // Для определения даты и времени
-
+#include <nlohmann/json.hpp>
 
 inline std::string m_time(const time_t now = time(nullptr)) {
     const tm *ltm {localtime(&now)};
@@ -20,7 +20,7 @@ inline int start_server() {
     // 0 - протокол по умолчанию
 
     if (sock_fd == -1) {
-        std::cout << "[ERROR] Socket()" << std::endl;
+        std::cerr << m_time() << "[ERROR] Socket()" << std::endl;
         return 1;
     }
 
@@ -29,7 +29,7 @@ inline int start_server() {
     constexpr int optval = 1;
     int ret = setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
     if (ret == -1) {
-        std::cout << "[ERROR] Setsockopt error" << std::endl;
+        std::cerr << m_time() << "[ERROR] Setsockopt error" << std::endl;
         return 1;
     }
 
@@ -47,7 +47,7 @@ inline int start_server() {
     ret = bind(sock_fd, reinterpret_cast<const struct sockaddr*>(&addr), sizeof(addr));
     // reinterpret_cast - для преобразования указателя на sockaddr_in в указатель sockaddr
     if (ret == -1) {
-        std::cout << "[ERROR] Bind error" << std::endl;
+        std::cerr << m_time() << "[ERROR] Bind error" << std::endl;
         return 1;
     }
 
@@ -56,7 +56,7 @@ inline int start_server() {
     // sock_fd - какой сокет слушать
     // 5 - сколько запросов на подключение может быть помещены в очередь, прежде чем будут отклонены дальнейшие запросы
     if (ret == -1) {
-        std::cout << "[ERROR] Listen error" << std::endl;
+        std::cerr << m_time() << "[ERROR] Listen error" << std::endl;
         return 1;
     }
 
@@ -67,7 +67,7 @@ inline int start_server() {
         // Accept() используется для принятия запроса на соединение,
         // полученного в сокете, который прослушивало приложение.
         if (client_socket == -1) {
-            std::cout << "[ERROR] Accept error" << std::endl;
+            std::cerr << m_time() << "[ERROR] Accept error" << std::endl;
             return 1;
         }
 
@@ -78,16 +78,17 @@ inline int start_server() {
         // Для отправки данных клиенту
         std::string msg{"Hello! I,m Server"};
         if (const size_t transmitted = send(client_socket, msg.data(), msg.size(), 0); transmitted != msg.size()) {
-            std::cerr << "[ERROR] not all data transmitted" << std::endl;
+            std::cerr << m_time() << "[ERROR] not all data transmitted" << std::endl;
             return 1;
         }
 
         // Для получения данных от клиента
         char buffer[64] = {'\0'};
         if (const ssize_t received = recv(client_socket, buffer, 64, 0); received <= 0) {
-            puts("[ERROR] Error recv()");
+            std::cerr << m_time() << "[ERROR] Error recv()" << std::endl;
         }
-        std::cout << m_time() << "[CLIENT] " << buffer << std::endl;
+
+        std::cout << m_time() << "[CLIENT] " <<  buffer << std::endl;
     }
     return 0;
 }
