@@ -12,6 +12,18 @@ inline std::string m_time(const time_t now = time(nullptr)) {
         " " + std::to_string(ltm->tm_hour) + ":" + std::to_string(ltm->tm_min) + ":" + std::to_string(ltm->tm_sec) + "] ";
 }
 
+class  User {
+private:
+    std::string m_nickname{};
+public:
+    static std::string nickname() {
+        std::cout << "Enter your nickname: ";
+        std::string name;
+        std::cin >> name;
+        return name;
+    }
+};
+
 inline int start_client() {
     // Файловый дескриптор сокета
     const int sock_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -38,10 +50,15 @@ inline int start_client() {
         return 1;
     }
 
-    std::cout << m_time() << "[CLIENT] Connection to " << inet_ntoa(addr.sin_addr) << ":" << ntohs(addr.sin_port) << " established!" << std::endl;
+    std::cout << m_time() << "[CLIENT] Connection to " << inet_ntoa(addr.sin_addr) << ":" << ntohs(addr.sin_port)
+    << " established!" << std::endl;
+
+    //JSON
+    nlohmann::json my_json;
+    my_json["name"] = User::nickname();
 
     // Для отправки данных на сервер
-    const std::string msg{"Hello! I,m Victor"};
+    const std::string msg{"Hello! I,m Client # 1"};
     if (const size_t transmitted = send(sock_fd, msg.data(), msg.size(), 0); transmitted != msg.size()) {
         std::cerr << m_time() << "[ERROR] not all data transmitted" << std::endl;
         return 1;
