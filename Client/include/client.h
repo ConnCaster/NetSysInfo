@@ -55,8 +55,6 @@ inline int start_client() {
 
     //JSON
     nlohmann::json my_json;
-    my_json["name"] = User::nickname();
-
     // Для отправки данных на сервер
     const std::string msg{"Hello! I,m Client # 1"};
     if (const size_t transmitted = send(sock_fd, msg.data(), msg.size(), 0); transmitted != msg.size()) {
