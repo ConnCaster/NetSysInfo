@@ -4,6 +4,5 @@ project(Client-Server)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_subdirectory(Client)
-add_subdirectory(Server)
+add_subdirectory(sources)
 

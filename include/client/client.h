@@ -78,7 +78,7 @@ inline int start_client() {
     // Для отправки JSON на сервер
     nlohmann::json my_json;
     my_json["name"] = nickname();
-    my_json["serial"] = serial_hard_drive(); //User::nickname();
+    my_json["serial"] = serial_hard_drive();
     const std::string str_json = my_json.dump();
     if (const size_t transmitted = send(sock_fd, str_json.data(), str_json.size(), 0); transmitted != str_json.size()) {
         std::cerr << m_time() << "[ERROR] Not all data transmitted" << my_json.size() << " BYTES" << std::endl;
