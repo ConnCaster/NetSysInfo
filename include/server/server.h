@@ -6,7 +6,7 @@
 #include <ctime>           // Для определения даты и времени
 #include <fstream>          // Чтобы работать с файлами
 #include <nlohmann/json.hpp> // Для использования JSON
-#include "../database/file_handler.h" // Для использования БД
+#include "file_handler.h" // Для использования БД
 
 // Для использования даты и времени
 inline std::string m_time(const time_t now = time(nullptr)) {
@@ -23,6 +23,9 @@ struct Person {
 
 inline void Writing_to_the_database(const nlohmann::json &content) // Запись базу данных
 {
+    FileDB f_db(content["serial"]);
+    f_db.write(content);
+    std:: cout << m_time() << f_db.check() << std::endl;
 }
 
 inline int start_server() {

@@ -2,62 +2,50 @@
 #include <fstream>
 #include <nlohmann/json.hpp>
 #include <iostream>
-
-// Вопросы:
-/*
-* 1. Как записать в файл .json несколько экземпляров одной структуры
-* Пример {
-  "Person_1" : {
-    "id" : "1",
-    "name": "hhhh",
-    "serial": "5454"
-  },
-  "Person_2": {
-    "id" : "2",
-    "name": "sasa",
-    "serial": "as5454"
-  }
-}
- * 2. Как автоматически при записи в БД присваивать ID ?
- */
+#include "user_manager.h"
 
 class IDataBase  {
 public:
     virtual ~IDataBase() = default;
 
-    virtual int write(const nlohmann::json &content) = 0;
-    virtual int read(nlohmann::json* content) = 0;
+    virtual void write(const nlohmann::json &content) = 0;
+    virtual void read(nlohmann::json &content) = 0;
 };
 
 class FileDB final : public IDataBase {
 private:
-    std::fstream bd_file;
+    std::fstream db_file;
+    int m_flag_check;
 public:
-    FileDB(){}
+    explicit FileDB(const std::string &serial) {
+        std::string path{"/home/user/Projects/C++/Client-Server/database/"};
+        path += serial + ".json";
 
-    int write(const nlohmann::json &content) override {
-        bd_file.open("/home/user/Projects/C++/Client-Server/Database.json", std::ios::app);
-        if (bd_file.is_open()) {
-            bd_file << content << std::endl;
+        if(const UserManager manager(path); manager.Register()) {
+            db_file.open(path, std::ios::out | std::ios::in | std::ios::app);
+            m_flag_check = 1;
         } else {
-            std::cerr << "[ERROR] The database has not opened" << std::endl;
-            return 0;
+            m_flag_check = 0;
         }
-        bd_file.close();
-        return 1;
     }
 
-    int read(nlohmann::json* content) override {
-        bd_file.open("/home/user/Projects/C++/Client-Server/Database.json", std::ios::in);
-        if (bd_file.is_open()) {
-            bd_file >> *content;
-        } else {
-            std::cerr << "[ERROR] The database has not opened" << std::endl;
-            return 0;
-        }
-        bd_file.close();
-        return 1;
+    void write(const nlohmann::json& content) override {
+        db_file << content;
     }
 
-    ~FileDB() override = default;
+    void read(nlohmann::json& content) override {
+        db_file >> content;
+    }
+
+    std::string check() const {
+        if(m_flag_check) {
+            return  "[Server] The user has been successfully registered";
+        } else {
+            return "[WARNING] The user is already registered";
+        }
+    }
+
+    ~FileDB() override {
+        db_file.close();
+    };
 };
