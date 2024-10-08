@@ -6,6 +6,7 @@
 #include <ctime>           // Для определения даты и времени
 #include <fstream>          // Чтобы работать с файлами
 #include <nlohmann/json.hpp> // Для использования JSON
+#include "file_handler.h" // Для использования БД
 
 // Для использования даты и времени
 inline std::string m_time(const time_t now = time(nullptr)) {
@@ -15,26 +16,21 @@ inline std::string m_time(const time_t now = time(nullptr)) {
 }
 
 struct Person {
-    std::string m_cli_name{};
-    std::string m_cli_serial{};
+    int m_cli_id; // Присваевается посе записи в БД
+    std::string m_cli_name{}; // Передается от клиента
+    std::string m_cli_serial{}; // Передается от клиента
 };
 
-inline void Writing_to_the_database(const Person *cli) // Запись структуры в файл
+inline void Writing_to_the_database(const nlohmann::json &content) // Запись базу данных
 {
-    std::ofstream bd_file;
-    bd_file.open("/home/user/Projects/C++/Client-Server/Database.txt", std::ios::app);
-    if (!bd_file.is_open()) {
-        std::cerr << "[ERROR] The database has not opened" << std::endl;
-    } else {
-        bd_file << cli->m_cli_name << "\t\t\t\t" << cli->m_cli_serial; // Как четко разграничить по столбцам ? std::setw() не очень сработало
-        bd_file.close();
-        std::cin.get();
-    }
+    FileDB f_db(content["serial"]);
+    f_db.write(content);
+    std:: cout << m_time() << f_db.check() << std::endl;
 }
 
 inline int start_server() {
     // Файловый дескриптор сокета
-    const int sock_fd = socket(AF_INET, SOCK_STREAM, 0);      // [Вопрос]Почему отсчет сокетов начинается с 3 ?
+    const int sock_fd = socket(AF_INET, SOCK_STREAM, 0);
     // AF_INET указывает семейство протоколов IPv4
     // SOCK_STREAM опрделяет тип сокета TCP
     // 0 - протокол по умолчанию
@@ -109,15 +105,9 @@ inline int start_server() {
         }
         // Парс JSON
         nlohmann::json _json = nlohmann::json::parse(buffer);
-        Person cli;
-        cli.m_cli_name = _json["name"].get<std::string>();
-        //std::cout << cli.m_cli_name << std::endl;
-        cli.m_cli_serial = _json["serial"].get<std::string>();
-        //std::cout << cli.m_cli_serial << std::endl;
 
-        Writing_to_the_database(&cli);
+        Writing_to_the_database(_json);
 
-        std::cout << m_time() << "[CLIENT] " <<  buffer << std::endl;
     }
     return 0;
 }
