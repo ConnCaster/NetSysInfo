@@ -20,10 +20,10 @@ inline std::string serial_hard_drive () {
     FILE *fp = popen("udevadm info --query=all --name=/dev/sda  | grep ID_SERIAL_SHORT", "r");
     if (fp == nullptr) std::cerr << "[ERROR] File not open" << std::endl;
 
-    while (fgets(c_serial, 20, fp) != nullptr) {} // Почему-то не работает, если я вместо с_serial пишу str.data() (заранее созданный)
+    while (fgets(c_serial, sizeof(c_serial), fp) != nullptr) {} // Почему-то не работает, если я вместо с_serial пишу str.data() (заранее созданный)
     //нет проверки работы fgets()
 
-    const auto s_serial{std::string(c_serial)};
+    std::string s_serial{std::string(c_serial)}; //22413C462705
 
     if (const int status = pclose(fp); status == -1) std::cerr <<  "[ERROR] File not close" << std::endl;
 
@@ -68,20 +68,23 @@ inline int start_client() {
     std::cout << m_time() << "[CLIENT] Connection to " << inet_ntoa(addr.sin_addr) << ":" << ntohs(addr.sin_port)
     << " established!" << std::endl;
 
+    /*
     // Для получения данных от сервера
     char buffer[64] = {'\0'};
     if (const ssize_t received = recv(sock_fd, buffer, sizeof(buffer), 0); received <= 0) {
         std::cerr << m_time() << "[ERROR] Error recv()" << std::endl;
     }
-    std::cout << m_time() << "[SERVER] " << buffer << std::endl;
+    std::cout << m_time() << "[SERVER] " << buffer << std::endl;*/
 
     // Для отправки JSON на сервер
-    nlohmann::json my_json;
-    my_json["name"] = nickname();
-    my_json["serial"] = serial_hard_drive();
-    const std::string str_json = my_json.dump();
+    nlohmann::json cli_json;
+    cli_json["action"] = "authUser";
+    cli_json["args"] = { {"name", nickname()}, {"serial", serial_hard_drive()} };
+
+    const std::string str_json = cli_json.dump();
+
     if (const size_t transmitted = send(sock_fd, str_json.data(), str_json.size(), 0); transmitted != str_json.size()) {
-        std::cerr << m_time() << "[ERROR] Not all data transmitted" << my_json.size() << " BYTES" << std::endl;
+        std::cerr << m_time() << "[ERROR] Not all data transmitted" << cli_json.size() << " BYTES" << std::endl;
         return 1;
     }
     return 0;
