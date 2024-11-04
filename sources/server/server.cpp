@@ -10,7 +10,7 @@ Server::Server(uint16_t port)
     // 0 - протокол по умолчанию
 
     if (sock_fd_== -1) {
-        std::cerr << m_time() << "[ERROR] Socket()" << std::endl;
+        std::cerr << Time() << "[ERROR] Socket()" << std::endl;
         throw std::runtime_error("[ERROR] Socket()");
     }
 
@@ -19,7 +19,7 @@ Server::Server(uint16_t port)
     constexpr int optval = 1;
     int ret = setsockopt(sock_fd_, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
     if (ret == -1) {
-        std::cerr << m_time() << "[ERROR] Setsockopt error" << std::endl;
+        std::cerr << Time() << "[ERROR] Setsockopt error" << std::endl;
         throw std::runtime_error("[ERROR] Setsockopt error");
     }
 
@@ -36,7 +36,7 @@ Server::Server(uint16_t port)
     ret = bind(sock_fd_, reinterpret_cast<const struct sockaddr*>(&addr_), sizeof(addr_));
     // reinterpret_cast - для преобразования указателя на sockaddr_in в указатель sockaddr
     if (ret == -1) {
-        std::cerr << m_time() << "[ERROR] Bind error" << std::endl;
+        std::cerr << Time() << "[ERROR] Bind error" << std::endl;
         throw std::runtime_error("[ERROR] Bind error");
     }
 
@@ -45,7 +45,7 @@ Server::Server(uint16_t port)
     // sock_fd - какой сокет слушать
     // 5 - сколько запросов на подключение может быть помещены в очередь, прежде чем будут отклонены дальнейшие запросы
     if (ret == -1) {
-        std::cerr << m_time() << "[ERROR] Listen error" << std::endl;
+        std::cerr << Time() << "[ERROR] Listen error" << std::endl;
         throw std::runtime_error("[ERROR] Listen error");
     }
 }
@@ -58,12 +58,12 @@ void Server::Run() {
         // Accept() используется для принятия запроса на соединение,
         // полученного в сокете, который прослушивало приложение.
         if (client_socket_ == -1) {
-            std::cerr << m_time() << "[ERROR] Accept error" << std::endl;
+            std::cerr << Time() << "[ERROR] Accept error" << std::endl;
             return;
         }
 
         // Если подключится клиент, выводим уведомление
-        std::cout << m_time() << "[SERVER] Accepted new connection from client with an " << inet_ntoa(addr_.sin_addr)
+        std::cout << Time() << "[SERVER] Accepted new connection from client with an " << inet_ntoa(addr_.sin_addr)
                   << ":" << ntohs(addr_.sin_port) << std::endl;
 
         Conection conect(Get_client_socket_());

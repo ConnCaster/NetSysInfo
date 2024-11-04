@@ -8,14 +8,9 @@
 #include <nlohmann/json.hpp> // Для использования JSON
 #include "file_handler.h"
 #include "action.h"
-#include "conection.h"
+#include "connection.h"
+#include "utils.h"
 
-// Для использования даты и времени
-inline std::string m_time(const time_t now = time(nullptr)) {
-    const tm *ltm {localtime(&now)};
-    return "[" + std::to_string(ltm->tm_mday) + ":" + std::to_string(ltm->tm_mon) + ":" + std::to_string(1900 + ltm->tm_year) +
-        " " + std::to_string(ltm->tm_hour) + ":" + std::to_string(ltm->tm_min) + ":" + std::to_string(ltm->tm_sec) + "] ";
-}
 
 class Server {
 private:

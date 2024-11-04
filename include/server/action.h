@@ -3,21 +3,20 @@
 
 class Action {
 public:
-    virtual void execute(nlohmann::json& j) = 0;
+    virtual bool execute(nlohmann::json& j) = 0;
     virtual ~Action() = default;
 };
 
 class Registration : public Action {
 public:
-    void execute(nlohmann::json& j) override;
+    bool execute(nlohmann::json& j) override;
 };
 
 class ActionFactory {
 public:
-    static Action* action_registr(const std::string& action) {
+    static auto Action_(const std::string &action) {
         if (action == "authUser") {
-            return new Registration();
+            return std::unique_ptr<Action>(new Registration());
         }
-        return nullptr;
     }
 };

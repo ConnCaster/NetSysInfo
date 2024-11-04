@@ -68,13 +68,7 @@ inline int start_client() {
     std::cout << m_time() << "[CLIENT] Connection to " << inet_ntoa(addr.sin_addr) << ":" << ntohs(addr.sin_port)
     << " established!" << std::endl;
 
-    /*
-    // Для получения данных от сервера
-    char buffer[64] = {'\0'};
-    if (const ssize_t received = recv(sock_fd, buffer, sizeof(buffer), 0); received <= 0) {
-        std::cerr << m_time() << "[ERROR] Error recv()" << std::endl;
-    }
-    std::cout << m_time() << "[SERVER] " << buffer << std::endl;*/
+
 
     // Для отправки JSON на сервер
     nlohmann::json cli_json;
@@ -87,5 +81,16 @@ inline int start_client() {
         std::cerr << m_time() << "[ERROR] Not all data transmitted" << cli_json.size() << " BYTES" << std::endl;
         return 1;
     }
+
+
+    // Для получения данных от сервера
+    char buffer[64] = {'\0'};
+    if (const ssize_t received = recv(sock_fd, buffer, sizeof(buffer), 0); received <= 0) {
+        std::cerr << m_time() << "[ERROR] Error recv()" << std::endl;
+    }
+    std::cout << m_time() << "[SERVER] " << buffer << std::endl;
+
+
+
     return 0;
 }
