@@ -11,7 +11,7 @@ inline std::string serial_hard_drive () {
     char c_serial[20];
     std::string str_serial{}; // ????
 
-    FILE *fp = popen("udevadm info --query=all --name=/dev/sda  | grep ID_SERIAL_SHORT", "r");
+    FILE *fp = popen("udevadm info --query=all --name=/dev/nvme0n1p1  | grep ID_SERIAL_SHORT", "r");
     if (fp == nullptr) std::cerr << "[ERROR] File not open" << std::endl;
 
     while (fgets(c_serial, sizeof(c_serial), fp) != nullptr) {} // Почему-то не работает, если я вместо с_serial пишу str.data() (заранее созданный)
@@ -37,6 +37,7 @@ void Conection::DoStart() {
     nlohmann::json im_json;
     im_json["action"] = "authUser";
     im_json["args"] = { {"name", nickname()}, {"serial", serial_hard_drive()} };
+    std::string test_str = im_json.dump();
     Send_msg(socket_fd_, im_json);
 }
 

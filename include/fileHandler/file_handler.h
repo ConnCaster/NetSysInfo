@@ -17,20 +17,16 @@ public:
 class FileDB final : public IDataBase {
 private:
     std::fstream db_file_;
-    int flag_;
+    int is_open_;
 public:
-    explicit FileDB(const std::string &serial);
+    explicit FileDB(const std::string &path);
 
-    void write(const nlohmann::json& content) override {
+    inline void write(const nlohmann::json& content) override {
         db_file_ << content;
     }
 
-    void read(nlohmann::json& content) override {
+    inline void read(nlohmann::json& content) override {
         db_file_ >> content;
-    }
-
-    int Get_flag_() {
-        return flag_;
     }
 
     ~FileDB() override {

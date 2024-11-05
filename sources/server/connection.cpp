@@ -2,7 +2,7 @@
 
 
 Conection::Conection(const int client_socket)
-    : conection_socket_(client_socket) {
+    : conection_socket_(client_socket), input_buffer_{}, output_buffer_{} {
     DoStart();
 }
 
@@ -18,6 +18,7 @@ void Conection::Recv_msg() {
     }
 
     // Парс JSON
+
     nlohmann::json cli_json = nlohmann::json::parse(input_buffer_.data());
 
     std::string action_str{};
@@ -41,7 +42,7 @@ void Conection::Recv_msg() {
     //Send_msg();
 }
 
-    void Conection::Send_msg(const int connection_socket, const nlohmann::json &send_json) {
+void Conection::Send_msg(const int connection_socket, const nlohmann::json &send_json) {
     // TODO (Viktor): Сериализация строки data
     // Не смог привязать output
     // А что если тип не string?
@@ -49,7 +50,7 @@ void Conection::Recv_msg() {
     const std::string str_json = send_json.dump();
 
     if (const size_t transmitted = send(connection_socket, str_json.data(), str_json.size(), 0); transmitted != str_json.size()) {
-        std::cerr << Time() << "[ERROR] not all data transmitted" << std::endl;
+    std::cerr << Time() << "[ERROR] not all data transmitted" << std::endl;
     }
     //Recv_msg()
 }
