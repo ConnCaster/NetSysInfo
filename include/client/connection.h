@@ -4,19 +4,16 @@
 #include <nlohmann/json.hpp>
 #include <sys/socket.h>
 #include "utils.h"
-#include "action.h"
 
 constexpr unsigned int buf_size = 512;
 
 class Conection {
 private:
-    int conection_socket_{0};
     int socket_fd_{0};
     std::array<unsigned char, buf_size> input_buffer_;
     std::array<unsigned char, buf_size> output_buffer_;
-
 public:
-    explicit Conection(const int client_socket);
+    explicit Conection(const int sock_fd);
 private:
     void DoStart();
     void Recv_msg();

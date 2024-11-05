@@ -12,7 +12,7 @@ int main() {
         std::cerr << err.what() << std::endl;
     }
     catch (...) {
-        std::cerr << "[ERROR] Unknown exception" << std::endl;
+        std::cerr << "[ERROR] [SERVER] Unknown exception" << std::endl;
     }
 
 

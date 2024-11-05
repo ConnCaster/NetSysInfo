@@ -38,6 +38,7 @@ void Conection::Recv_msg() {
             Send_msg(conection_socket_, answer);
         }
     }
+    //Send_msg();
 }
 
     void Conection::Send_msg(const int connection_socket, const nlohmann::json &send_json) {
@@ -50,6 +51,7 @@ void Conection::Recv_msg() {
     if (const size_t transmitted = send(connection_socket, str_json.data(), str_json.size(), 0); transmitted != str_json.size()) {
         std::cerr << Time() << "[ERROR] not all data transmitted" << std::endl;
     }
+    //Recv_msg()
 }
 
 
