@@ -4,7 +4,7 @@ set(PROJECT_NAME Server)
 list(APPEND ${PROJECT_NAME}_SOURCES
         server_main.cpp
         server.cpp
-        connection.cpp
+        serv_connection.cpp
         ${CMAKE_SOURCE_DIR}/sources/fileHandler/file_handler.cpp
 )
 

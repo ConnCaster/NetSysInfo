@@ -1,8 +1,8 @@
-#include "connection.h"
+#include "cli_connection.h"
 
 
 Conection::Conection(const int sock_fd)
-    : socket_fd_(sock_fd) {
+    : socket_fd_(sock_fd), input_buffer_(), output_buffer_() {
     DoStart();
 }
 
@@ -11,7 +11,9 @@ inline std::string serial_hard_drive () {
     char c_serial[20];
     std::string str_serial{}; // ????
 
-    FILE *fp = popen("udevadm info --query=all --name=/dev/nvme0n1p1  | grep ID_SERIAL_SHORT", "r");
+    // TODO (Viktor): НАименование ЖД для всех ?
+
+    FILE *fp = popen("udevadm info --query=all --name=/dev/sda  | grep ID_SERIAL_SHORT", "r");
     if (fp == nullptr) std::cerr << "[ERROR] File not open" << std::endl;
 
     while (fgets(c_serial, sizeof(c_serial), fp) != nullptr) {} // Почему-то не работает, если я вместо с_serial пишу str.data() (заранее созданный)
@@ -36,8 +38,8 @@ inline std::string nickname() {
 void Conection::DoStart() {
     nlohmann::json im_json;
     im_json["action"] = "authUser";
+
     im_json["args"] = { {"name", nickname()}, {"serial", serial_hard_drive()} };
-    std::string test_str = im_json.dump();
     Send_msg(socket_fd_, im_json);
 }
 
@@ -49,6 +51,7 @@ void Conection::Recv_msg() {
     }
     // Парс JSON
     nlohmann::json answer = nlohmann::json::parse(input_buffer_.data());
+
     std::cout <<Time() << "[SERVER] " << answer["answer"] << std::endl;
     //Send()
 }

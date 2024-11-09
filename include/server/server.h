@@ -8,7 +8,7 @@
 #include <nlohmann/json.hpp> // Для использования JSON
 #include "file_handler.h"
 #include "factory.h"
-#include "connection.h"
+#include "serv_connection.h"
 #include "utils.h"
 
 
