@@ -10,7 +10,7 @@ constexpr unsigned int buf_size = 512;
 
 class Conection {
 private:
-    int conection_socket_{0};
+    int connection_socket_{0};
     int socket_fd_{0};
     std::array<unsigned char, buf_size> input_buffer_;
     std::array<unsigned char, buf_size> output_buffer_;
@@ -20,5 +20,5 @@ public:
 private:
     void DoStart();
     void Recv_msg();
-    void Send_msg(int connection_socket, const nlohmann::json &send_json);
+    void Send_msg(const nlohmann::json &send_json);
 };

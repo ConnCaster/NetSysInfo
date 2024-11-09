@@ -5,7 +5,7 @@
 #include <arpa/inet.h>
 #include <nlohmann/json.hpp>
 #include "utils.h"
-#include "connection.h"
+#include "cli_connection.h"
 
 
 class Client {
