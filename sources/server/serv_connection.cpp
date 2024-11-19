@@ -29,7 +29,7 @@ void Conection::Recv_msg() {
     }
 
     // Обработка действия
-    if (const auto action = ActionFactory::Action_(action_str)) {
+    if (const auto action = ActionFactory::ActionFact(action_str)) {
         nlohmann::json answer;
         if( action->execute(cli_json)) {
             answer["answer"] = "You have successfully registered";

@@ -17,6 +17,12 @@ private:
 
 public:
     explicit Conection(const int client_socket);
+
+    ~Conection() {
+        shutdown(connection_socket_,2);
+        close(connection_socket_);
+    }
+
 private:
     void DoStart();
     void Recv_msg();
