@@ -9,19 +9,22 @@ Conection::Conection(const int sock_fd)
 // Получение серийного номера жесткого диска
 inline std::string serial_hard_drive () {
     char c_serial[20];
+    // TODO (Viktor): Можно ли вместо char[] использовать std::string ?
     std::string str_serial{}; // ????
 
-    // TODO (Viktor): НАименование ЖД для всех ?
+    // TODO (Viktor): Нaименование ЖД для всех ?
+    // TODO (Viktor): Добавить деструктор для unique (decltype) Прочитать про это в книжке "42 совета ..."
 
-    FILE *fp = popen("udevadm info --query=all --name=/dev/sda  | grep ID_SERIAL_SHORT", "r");
+    std::unique_ptr<FILE, decltype(&pclose)> fp (popen("udevadm info --query=all --name=/dev/sda  | grep ID_SERIAL_SHORT", "r"), pclose);
     if (fp == nullptr) std::cerr << "[ERROR] File not open" << std::endl;
 
-    while (fgets(c_serial, sizeof(c_serial), fp) != nullptr) {} // Почему-то не работает, если я вместо с_serial пишу str.data() (заранее созданный)
-    //нет проверки работы fgets()
+    while (fgets(c_serial, sizeof(c_serial), *fp) != nullptr) {} // Почему-то не работает, если я вместо с_serial пишу str.data() (заранее созданный)
+
+    // TODO (Viktor): нет проверки работы fgets()
 
     std::string s_serial{std::string(c_serial)}; //22413C462705
 
-    if (const int status = pclose(fp); status == -1) std::cerr <<  "[ERROR] File not close" << std::endl;
+    if (const int status = pclose(*fp); status == -1) std::cerr <<  "[ERROR] File not close" << std::endl;
 
     return s_serial;
 }

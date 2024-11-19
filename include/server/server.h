@@ -5,6 +5,7 @@
 #include <netinet/in.h>    // Для использования sockaddr_in
 #include <ctime>           // Для определения даты и времени
 #include <fstream>          // Чтобы работать с файлами
+#include <unistd.h>
 #include <nlohmann/json.hpp> // Для использования JSON
 #include "file_handler.h"
 #include "factory.h"
@@ -25,5 +26,9 @@ public:
 
     int Get_client_socket_() {
         return client_socket_;
+    }
+
+    ~Server() {
+        close(sock_fd_);
     }
 };
