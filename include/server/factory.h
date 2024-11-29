@@ -14,7 +14,7 @@ public:
 
 class ActionFactory {
 public:
-    static auto Action_(const std::string &action) {
+    static auto ActionFact(const std::string &action) {
         if (action == "authUser") {
             return std::unique_ptr<Action>(new Registration());
         }

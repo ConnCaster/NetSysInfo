@@ -1,25 +1,30 @@
-#include "connection.h"
+#include "cli_connection.h"
 
 
 Conection::Conection(const int sock_fd)
-    : socket_fd_(sock_fd) {
+    : socket_fd_(sock_fd), input_buffer_(), output_buffer_() {
     DoStart();
 }
 
 // Получение серийного номера жесткого диска
 inline std::string serial_hard_drive () {
     char c_serial[20];
+    // TODO (Viktor): Можно ли вместо char[] использовать std::string ?
     std::string str_serial{}; // ????
 
-    FILE *fp = popen("udevadm info --query=all --name=/dev/nvme0n1p1  | grep ID_SERIAL_SHORT", "r");
+    // TODO (Viktor): Нaименование ЖД для всех ?
+    // TODO (Viktor): Добавить деструктор для unique (decltype) Прочитать про это в книжке "42 совета ..."
+
+    std::unique_ptr<FILE, decltype(&pclose)> fp (popen("udevadm info --query=all --name=/dev/sda  | grep ID_SERIAL_SHORT", "r"), pclose);
     if (fp == nullptr) std::cerr << "[ERROR] File not open" << std::endl;
 
-    while (fgets(c_serial, sizeof(c_serial), fp) != nullptr) {} // Почему-то не работает, если я вместо с_serial пишу str.data() (заранее созданный)
-    //нет проверки работы fgets()
+    while (fgets(c_serial, sizeof(c_serial), *fp) != nullptr) {} // Почему-то не работает, если я вместо с_serial пишу str.data() (заранее созданный)
+
+    // TODO (Viktor): нет проверки работы fgets()
 
     std::string s_serial{std::string(c_serial)}; //22413C462705
 
-    if (const int status = pclose(fp); status == -1) std::cerr <<  "[ERROR] File not close" << std::endl;
+    if (const int status = pclose(*fp); status == -1) std::cerr <<  "[ERROR] File not close" << std::endl;
 
     return s_serial;
 }
@@ -36,8 +41,8 @@ inline std::string nickname() {
 void Conection::DoStart() {
     nlohmann::json im_json;
     im_json["action"] = "authUser";
+
     im_json["args"] = { {"name", nickname()}, {"serial", serial_hard_drive()} };
-    std::string test_str = im_json.dump();
     Send_msg(socket_fd_, im_json);
 }
 
@@ -49,6 +54,7 @@ void Conection::Recv_msg() {
     }
     // Парс JSON
     nlohmann::json answer = nlohmann::json::parse(input_buffer_.data());
+
     std::cout <<Time() << "[SERVER] " << answer["answer"] << std::endl;
     //Send()
 }
