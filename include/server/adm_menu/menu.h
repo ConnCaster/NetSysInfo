@@ -1,22 +1,28 @@
 #pragma once
 #include <iostream>
 #include <memory>
+#include <vector>
 
 class Menu {
 public:
-    virtual void Choice() = 0;
-    ~Menu() = default;
+    virtual int Choice() = 0;
+    virtual ~Menu() = default;
 };
 
 class ListRequest : public Menu{
 public:
-    void Choice() override;
-    void Desicion();
+    int Choice() override;
+    int Desicion(std::vector<std::string>&);
 };
 
+class ListUsers : public Menu{
+public:
+    int Choice() override;
+    int Desicion(std::vector<std::string>&);
+};
 class TurnOFF : public Menu {
 public:
-    void Choice() override;
+    int Choice() override;
 };
 
 class MenuFactory {
@@ -27,6 +33,8 @@ public:
                 return std::unique_ptr<Menu>(new TurnOFF());
             case 1:
                 return std::unique_ptr<Menu>(new ListRequest());
+            case 2:
+                return std::unique_ptr<Menu>(new ListUsers());
             default:
                 std::cout << "There is no such command, select an item from the suggested options" << std::endl;
 
