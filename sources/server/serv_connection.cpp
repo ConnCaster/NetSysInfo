@@ -1,4 +1,5 @@
 #include "serv_connection.h"
+#include "utils.h"
 
 
 Conection::Conection(const int client_socket)

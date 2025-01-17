@@ -5,17 +5,17 @@ list(APPEND ${PROJECT_NAME}_SOURCES
         server_main.cpp
         server.cpp
         serv_connection.cpp
-        adm_menu/menu.cpp
+        #adm_menu/menu.cpp
         ${CMAKE_SOURCE_DIR}/sources/fileHandler/file_handler.cpp
+        actions/registration.cpp
+
 )
 
 # Реализация новых executors
-list(APPEND ${PROJECT_NAME}_SOURCES
-        actions/registration.cpp
-)
+list(APPEND ${PROJECT_NAME}_SOURCES)
 
 
-add_executable(start_server ${${PROJECT_NAME}_SOURCES} )
+add_executable(start_server ${${PROJECT_NAME}_SOURCES})
 
 target_include_directories(start_server PUBLIC "${CMAKE_SOURCE_DIR}/lib/JSON/include"
         "${CMAKE_SOURCE_DIR}/include/"
@@ -25,4 +25,4 @@ target_include_directories(start_server PUBLIC "${CMAKE_SOURCE_DIR}/lib/JSON/inc
         "${CMAKE_SOURCE_DIR}/include/userManager"
 )
 
-add_subdirectory(adm_menu)
+#add_subdirectory(adm_menu)

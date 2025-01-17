@@ -12,13 +12,15 @@ public:
 class ListRequest : public Menu{
 public:
     int Choice() override;
-    int Desicion(std::vector<std::string>&);
+private:
+    int Actions(std::vector<std::string>&);
 };
 
 class ListUsers : public Menu{
 public:
     int Choice() override;
-    int Desicion(std::vector<std::string>&);
+private:
+    int Actions(std::vector<std::string>&);
 };
 class TurnOFF : public Menu {
 public:

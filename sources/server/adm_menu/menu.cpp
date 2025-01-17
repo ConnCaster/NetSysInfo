@@ -2,11 +2,12 @@
 #include <string>
 #include <filesystem>
 #include <vector>
+#include "utils.h"
 
-// Имя пользователя через substr
-// Выход из подсистем back
-// Изменить имя функции Desicion
-// Перемещение файлa через filesystem
+// Имя пользователя через substr в отдельном хедере (+)
+// Выход из подсистем back (+)
+// Изменить имя функции Desicion и добавить в private секцию(+)
+// Перемещение файлa через filesystem (+)
 // Общий путь для файла через флаги компиляции (флаги условной компиляции) СMake
 
 // Почитать про Кему и КВМ , testo lang
@@ -20,12 +21,12 @@ int TurnOFF::Choice() {
 }
 
 // Действия со списком Запросов на регистрацию
-int ListRequest::Desicion(std::vector<std::string> &user) {
+int ListRequest::Actions(std::vector<std::string> &user) {
     std::cout << "\nPlease select an item:\n"
-    << "0. Exit\n" << "1. Register a request\n" << "2. Deleted a request\n" << ">> ";
-    int des;
-    std::cin >> des;
-    switch (des) {
+    << "0. Back\n" << "1. Register a request\n" << "2. Deleted a request\n" << ">> ";
+    int act;
+    std::cin >> act;
+    switch (act) {
         case 0:
             return 0;
         case 1: {
@@ -37,11 +38,13 @@ int ListRequest::Desicion(std::vector<std::string> &user) {
                 std::cin >> num;
             }
 
-            std::string old_name = user[num - 1];
-            std::string new_name {"/home/user/Projects/C++/Client-Server/database/users/" + old_name.replace(0, 56, "")};
-            char command[ 1024 ];
-            sprintf( command, "mv '%s' '%s'", user[num-1].data(), new_name.data() );
-            system(command);
+            std::string new_path {"/home/user/Projects/C++/Client-Server/database/users/" + ExtractionName(user[num - 1]) + ".json"};
+            try {
+                std::filesystem::rename(user[num - 1], new_path);
+            }
+            catch (...) {
+                std::cerr << "Error during user registration" << std::endl;
+            }
 
             user.erase(user.begin() + (num-1));
 
@@ -67,9 +70,9 @@ int ListRequest::Desicion(std::vector<std::string> &user) {
 }
 
 // Действия со списком Пользователей
-int ListUsers::Desicion(std::vector<std::string> &user) {
+int ListUsers::Actions(std::vector<std::string> &user) {
     std::cout << "\nPlease select an item:\n"
-    << "0. Exit\n" << "1. Deleted a user\n" << ">> ";
+    << "0. Back\n" << "1. Deleted a user\n" << ">> ";
     int des;
     std::cin >> des;
     switch (des) {
@@ -107,24 +110,17 @@ int ListRequest::Choice() {
     // Вывод списка
     std::cout << "\nRequests:" << std::endl;
     for (int i = 0; i < requests_users.size(); i++) {
-        std::string tmp = requests_users[i];
-        tmp.replace(0, 56, "");
-        size_t start {tmp.find(".json")};
-        tmp.replace(start, 4, "");
-        std::cout << i + 1 << ". " << tmp << std::endl;
+        std::cout << i + 1 << ". " << ExtractionName(requests_users[i]) << std::endl;
     }
 
-    while (requests_users.size() > 0 && Desicion(requests_users) != 0) {
+    while (requests_users.size() > 0 && Actions(requests_users) != 0) {
         // Вывод списка
         std::cout << "\nRequests:" << std::endl;
         for (int i = 0; i < requests_users.size(); i++) {
-            std::string tmp = requests_users[i];
-            tmp.replace(0, 56, "");
-            size_t start {tmp.find(".json")};
-            tmp.replace(start, 4, "");
-            std::cout << i + 1 << ". " << tmp << std::endl;
+            std::cout << i + 1 << ". " << ExtractionName(requests_users[i]) << std::endl;
         }
-        Desicion(requests_users);
+
+        //Actions(requests_users);
     }
     if (requests_users.size() == 0) {
         std::cout << "\nThe list of registration requests is empty" << std::endl;
@@ -146,24 +142,17 @@ int ListUsers::Choice() {
     // Вывод списка
     std::cout << "\nUsers:" << std::endl;
     for (int i = 0; i < list_users.size(); i++) {
-        std::string tmp = list_users[i];
-        tmp.replace(0, 53, "");
-        size_t start {tmp.find(".json")};
-        tmp.replace(start, 4, "");
-        std::cout << i + 1 << ". " << tmp << std::endl;
+        std::cout << i + 1 << ". " << ExtractionName(list_users[i]) << std::endl;
+
     }
 
-    while (list_users.size() > 0 && Desicion(list_users) != 0) {
+    while (list_users.size() > 0 && Actions(list_users) != 0) {
         // Вывод списка
         std::cout << "\nUsers:" << std::endl;
         for (int i = 0; i < list_users.size(); i++) {
-            std::string tmp = list_users[i];
-            tmp.replace(0, 56, "");
-            size_t start {tmp.find(".json")};
-            tmp.replace(start, 4, "");
-            std::cout << i + 1 << ". " << tmp << std::endl;
+            std::cout << i + 1 << ". " << ExtractionName(list_users[i]) << std::endl;
         }
-        Desicion(list_users);
+        Actions(list_users);
     }
     if (list_users.size() == 0) {
         std::cout << "\nThe list of registration users is empty" << std::endl;
@@ -183,6 +172,7 @@ int main() {
             choice_main->Choice();
         }
     }
+
     return 0;
 }
 
