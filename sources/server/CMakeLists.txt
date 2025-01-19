@@ -8,6 +8,7 @@ list(APPEND ${PROJECT_NAME}_SOURCES
         #adm_menu/menu.cpp
         ${CMAKE_SOURCE_DIR}/sources/fileHandler/file_handler.cpp
         actions/registration.cpp
+        ../utils.cpp
 
 )
 

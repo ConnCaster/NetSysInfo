@@ -8,16 +8,28 @@ Conection::Conection(const int sock_fd)
     DoStart();
 }
 
+std::string findDeviceHardDisk () {
+
+    std::ifstream pathHardDisk ("/proc/mounts");
+    MountEntry hardDisk;
+
+    while (!pathHardDisk.eof()) {
+        pathHardDisk >> hardDisk;
+        for (auto it : kFsTypesSet) {
+            if (hardDisk.GetFsType() == it) {
+                return hardDisk.GetDevice();
+            }
+        }
+    }
+}
+
 // Получение серийного номера жесткого диска
 inline std::string serial_hard_drive () {
     char c_serial[20];
-    std::ifstream pathHardDisk;
-    pathHardDisk.open("/proc/mounts");
-    MountEntry hardDisk;
-    pathHardDisk >> hardDisk;
+    const std::string deviceHardDisk = findDeviceHardDisk();
 
-    const std::string strPathHardDisk = "udevadm info --query=all --name=" + hardDisk.GetMountDev() + " | grep ID_SERIAL_SHORT";
-    // "udevadm info --query=all --name=/dev/sda  | grep ID_SERIAL_SHORT"
+    const std::string strPathHardDisk = "udevadm info --query=all --name=" + deviceHardDisk + " | grep ID_SERIAL_SHORT";
+
     std::unique_ptr<FILE, decltype(&pclose)> fp (popen(strPathHardDisk.data(), "r"), pclose);
     if (fp == nullptr) std::cerr << "[ERROR] File not open" << std::endl;
 
