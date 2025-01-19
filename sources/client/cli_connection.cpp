@@ -3,14 +3,12 @@
 
 // TODO (Viktor): Добавить деструктор для unique (decltype) Прочитать про это в книжке "42 совета ..."
 
-Conection::Conection(const int sock_fd)
-    : socket_fd_(sock_fd), input_buffer_(), output_buffer_() {
-    DoStart();
-}
-
-std::string findDeviceHardDisk () {
+// Поиск наименования жесткого диска в системе
+inline std::string findDeviceHardDisk () {
 
     std::ifstream pathHardDisk ("/proc/mounts");
+    if (!pathHardDisk.is_open()) std::cerr << "[ERROR] File not open" << std::endl;
+
     MountEntry hardDisk;
 
     while (!pathHardDisk.eof()) {
@@ -25,12 +23,13 @@ std::string findDeviceHardDisk () {
 
 // Получение серийного номера жесткого диска
 inline std::string serial_hard_drive () {
+
     char c_serial[20];
     const std::string deviceHardDisk = findDeviceHardDisk();
 
-    const std::string strPathHardDisk = "udevadm info --query=all --name=" + deviceHardDisk + " | grep ID_SERIAL_SHORT";
+    const std::string outSerialHardDisk = "udevadm info --query=all --name=" + deviceHardDisk + " | grep ID_SERIAL_SHORT";
 
-    std::unique_ptr<FILE, decltype(&pclose)> fp (popen(strPathHardDisk.data(), "r"), pclose);
+    std::unique_ptr<FILE, decltype(&pclose)> fp (popen(outSerialHardDisk.data(), "r"), pclose);
     if (fp == nullptr) std::cerr << "[ERROR] File not open" << std::endl;
 
     while (fgets(c_serial, sizeof(c_serial), fp.get()) != nullptr) {} // Почему-то не работает, если я вместо с_serial пишу str.data() (заранее созданный)
@@ -51,12 +50,17 @@ inline std::string nickname() {
     return nicknmae;
 }
 
+Conection::Conection(const int sock_fd)
+    : socket_fd_(sock_fd), input_buffer_(), output_buffer_() {
+    DoStart();
+}
+
 void Conection::DoStart() {
     nlohmann::json im_json;
     im_json["action"] = "authUser";
 
     im_json["args"] = { {"name", nickname()}, {"serial", serial_hard_drive()} };
-    Send_msg( im_json);
+    Send_msg(im_json);
 }
 
 void Conection::Recv_msg() {
