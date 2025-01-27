@@ -14,9 +14,17 @@ inline std::string serial_hard_drive () {
     std::ifstream pathHardDisk;
     pathHardDisk.open("/proc/mounts");
     MountEntry hardDisk;
-    pathHardDisk >> hardDisk;
+    int flag{0};
+    while (!pathHardDisk.eof() && flag != 1) {
+        pathHardDisk >> hardDisk;
+        for (auto it : kFsTypesSet) {
+            if (hardDisk.GetFsType() == it) {
+                flag++;
+            }
+        }
+    }
 
-    const std::string strPathHardDisk = "udevadm info --query=all --name=" + hardDisk.GetMountDev() + " | grep ID_SERIAL_SHORT";
+    const std::string strPathHardDisk = "udevadm info --query=all --name=" + hardDisk.GetDevice() + " | grep ID_SERIAL_SHORT";
     // "udevadm info --query=all --name=/dev/sda  | grep ID_SERIAL_SHORT"
     std::unique_ptr<FILE, decltype(&pclose)> fp (popen(strPathHardDisk.data(), "r"), pclose);
     if (fp == nullptr) std::cerr << "[ERROR] File not open" << std::endl;

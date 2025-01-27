@@ -23,7 +23,6 @@ Client::Client(const uint16_t port)
 
 void Client::Run() const {
 
-    while (true) {
         // Соеденение с сервером
         if (const int ret = connect(sock_fd_, reinterpret_cast<const struct sockaddr*>(&addr_),sizeof(addr_)); ret == -1) {
             std::cerr << Time() << "[ERROR] Connection ERROR to " << inet_ntoa(addr_.sin_addr) << std::endl;
@@ -35,7 +34,6 @@ void Client::Run() const {
         }
 
         std::this_thread::sleep_for(std::chrono::seconds (5));
-    }
 
 }
 

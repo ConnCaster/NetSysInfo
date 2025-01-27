@@ -1,23 +1,30 @@
 #include "menu.h"
+#include "server.h"
+#include "utils.h"
 #include <string>
 #include <filesystem>
 #include <vector>
-#include "utils.h"
 
-// Имя пользователя через substr в отдельном хедере (+)
-// Выход из подсистем back (+)
-// Изменить имя функции Desicion и добавить в private секцию(+)
-// Перемещение файлa через filesystem (+)
-// Общий путь для файла через флаги компиляции (флаги условной компиляции) СMake
-
-// Почитать про Кему и КВМ , testo lang
-// Установить Вирт менеджер и Кему КВМ
-// Скачать из интернета образ ОС (любой) и потом создать виртуальную машину
-// qcow2 почитать что это
+// TODO [Victor] : Общий путь для файла через флаги компиляции (флаги условной компиляции) СMake
 
 // Выключение сервера
-int TurnOFF::Choice() {
+int TurnOff::Choice() {
     exit(0);
+}
+// Включение сервера
+int TurnOn::Choice() {
+    try {
+        Server server(5000);
+        server.Run();
+
+    }
+    catch (const std::runtime_error err) {
+        std::cerr << err.what() << std::endl;
+    }
+    catch (...) {
+        std::cerr << "[ERROR] [SERVER] Unknown exception" << std::endl;
+    }
+    return 0;
 }
 
 // Действия со списком Запросов на регистрацию
@@ -165,8 +172,8 @@ int main() {
     int adm_choice {-1};
     while (adm_choice != 0) {
         std::cout << "\nPlease, select the appropriate item from the list below:\n"
-        << "0. Turn off the Server\n" << "1. Display a list of registration requests\n"
-        << "2. Display the list of users\n" << ">> ";
+        << "0. Turn off the Server\n" << "1. Turn on the Server\n" << "2. Display a list of registration requests\n"
+        << "3. Display the list of users\n" << ">> ";
         std::cin >> adm_choice;
         if (const auto choice_main = MenuFactory::ChoiceFact(adm_choice)) {
             choice_main->Choice();
