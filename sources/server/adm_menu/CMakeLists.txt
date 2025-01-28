@@ -2,7 +2,6 @@ set(PROJECT_NAME Admin)
 
 # Реализация сервера
 list(APPEND ${PROJECT_NAME}_SOURCES
-        ../server_main.cpp
         ../server.cpp
         ../serv_connection.cpp
         menu.cpp

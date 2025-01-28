@@ -12,9 +12,9 @@ inline std::string Time(const time_t now = time(nullptr)) {
 
 // Для корректировки имени
 inline std::string ExtractionName (const std::string& path) {
-    int size_name = path.size() - (path.find_last_of("/") + (path.size() - path.find(".json") + 1));
+    int sizeName = path.size() - (path.find_last_of("/") + (path.size() - path.find(".json") + 1));
 
-    return path.substr(path.find_last_of("/") + 1,size_name);
+    return path.substr(path.find_last_of("/") + 1,sizeName);
 }
 
 // Для нахождени расположения ЖД

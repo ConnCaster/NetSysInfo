@@ -28,7 +28,7 @@ int TurnOn::Choice() {
 }
 
 // Действия со списком Запросов на регистрацию
-int ListRequest::Actions(std::vector<std::string> &user) {
+int ListRequest::Actions(std::vector<std::string> &requests) {
     std::cout << "\nPlease select an item:\n"
     << "0. Back\n" << "1. Register a request\n" << "2. Deleted a request\n" << ">> ";
     int act;
@@ -40,20 +40,20 @@ int ListRequest::Actions(std::vector<std::string> &user) {
             std::cout << "\nSelect the request number: ";
             int num;
             std::cin >> num;
-            while (num > user.size() || num < 1) {
+            while (num > requests.size() || num < 1) {
                 std::cout << "\nThere is no request under this number\nSelect the request number: ";
                 std::cin >> num;
             }
 
-            std::string new_path {"/home/user/Projects/C++/Client-Server/database/users/" + ExtractionName(user[num - 1]) + ".json"};
+            std::string new_path {"/home/user/Projects/C++/Client-Server/database/users/" + ExtractionName(requests[num - 1]) + ".json"};
             try {
-                std::filesystem::rename(user[num - 1], new_path);
+                std::filesystem::rename(requests[num - 1], new_path);
             }
             catch (...) {
                 std::cerr << "Error during user registration" << std::endl;
             }
 
-            user.erase(user.begin() + (num-1));
+            requests.erase(requests.begin() + (num-1));
 
             return 1; // Регистрация
         }
@@ -61,19 +61,49 @@ int ListRequest::Actions(std::vector<std::string> &user) {
             std::cout << "\nSelect the request number: ";
             int num;
             std::cin >> num;
-            while (num > user.size()) {
+            while (num > requests.size()) {
                 std::cout << "\nThere is no request under this number\nSelect the request number: ";
                 std::cin >> num;
             }
 
-            std::string command {"rm " + user[num - 1]};
+            std::string command {"rm " + requests[num - 1]};
             system(command.data());
 
-            user.erase(user.begin() + (num-1));
+            requests.erase(requests.begin() + (num-1));
 
             return 1; // Удаление
         }
     }
+}
+
+// Список запросов на регистрацию
+int ListRequest::Choice() {
+    // Подготовка списка
+    std::vector<std::string> requests_users;
+    std::filesystem::directory_iterator iterator = std::filesystem::directory_iterator("/home/user/Projects/C++/Client-Server/database/requests/");
+
+    for (; iterator != std::filesystem::end(iterator); iterator++) {
+        requests_users.push_back(iterator->path().string());
+    }
+
+    // Вывод списка
+    std::cout << "\nRequests:" << std::endl;
+    for (int i = 0; i < requests_users.size(); i++) {
+        std::cout << i + 1 << ". " << ExtractionName(requests_users[i]) << std::endl;
+    }
+
+    while (requests_users.size() > 0 && Actions(requests_users) != 0) {
+        // Вывод списка
+        std::cout << "\nRequests:" << std::endl;
+        for (int i = 0; i < requests_users.size(); i++) {
+            std::cout << i + 1 << ". " << ExtractionName(requests_users[i]) << std::endl;
+        }
+    }
+    if (requests_users.size() == 0) {
+        std::cout << "\nThe list of registration requests is empty" << std::endl;
+        return 0;
+    }
+    return 0;
 }
 
 // Действия со списком Пользователей
@@ -102,38 +132,6 @@ int ListUsers::Actions(std::vector<std::string> &user) {
             return 1; // Удаление
         }
     }
-}
-
-// Список запросов на регистрацию
-int ListRequest::Choice() {
-    // Подготовка списка
-    std::vector<std::string> requests_users;
-    std::filesystem::directory_iterator iterator = std::filesystem::directory_iterator("/home/user/Projects/C++/Client-Server/database/requests/");
-
-    for (; iterator != std::filesystem::end(iterator); iterator++) {
-            requests_users.push_back(iterator->path().string());
-    }
-
-    // Вывод списка
-    std::cout << "\nRequests:" << std::endl;
-    for (int i = 0; i < requests_users.size(); i++) {
-        std::cout << i + 1 << ". " << ExtractionName(requests_users[i]) << std::endl;
-    }
-
-    while (requests_users.size() > 0 && Actions(requests_users) != 0) {
-        // Вывод списка
-        std::cout << "\nRequests:" << std::endl;
-        for (int i = 0; i < requests_users.size(); i++) {
-            std::cout << i + 1 << ". " << ExtractionName(requests_users[i]) << std::endl;
-        }
-
-        //Actions(requests_users);
-    }
-    if (requests_users.size() == 0) {
-        std::cout << "\nThe list of registration requests is empty" << std::endl;
-        return 0;
-    }
-    return 0;
 }
 
 // Список Пользователей
