@@ -1,30 +1,52 @@
 #include "cli_connection.h"
+#include <fstream>
 
+// TODO (Viktor): Добавить деструктор для unique (decltype) Прочитать про это в книжке "42 совета ..."
 
-Conection::Conection(const int sock_fd)
-    : socket_fd_(sock_fd), input_buffer_(), output_buffer_() {
-    DoStart();
+// Поиск наименования жесткого диска в системе
+inline std::string findDeviceHardDisk () {
+
+    std::ifstream pathHardDisk ("/proc/mounts");
+    if (!pathHardDisk.is_open()) std::cerr << "[ERROR] File not open" << std::endl;
+
+    MountEntry hardDisk;
+
+    while (!pathHardDisk.eof()) {
+        pathHardDisk >> hardDisk;
+        for (auto it : kFsTypesSet) {
+            if (hardDisk.GetFsType() == it) {
+                return hardDisk.GetDevice();
+            }
+        }
+    }
 }
 
 // Получение серийного номера жесткого диска
 inline std::string serial_hard_drive () {
     char c_serial[20];
-    // TODO (Viktor): Можно ли вместо char[] использовать std::string ?
-    std::string str_serial{}; // ????
+    std::ifstream pathHardDisk;
+    pathHardDisk.open("/proc/mounts");
+    MountEntry hardDisk;
+    int flag{0};
+    while (!pathHardDisk.eof() && flag != 1) {
+        pathHardDisk >> hardDisk;
+        for (auto it : kFsTypesSet) {
+            if (hardDisk.GetFsType() == it) {
+                flag++;
+            }
+        }
+    }
 
-    // TODO (Viktor): Нaименование ЖД для всех ?
-    // TODO (Viktor): Добавить деструктор для unique (decltype) Прочитать про это в книжке "42 совета ..."
-
-    std::unique_ptr<FILE, decltype(&pclose)> fp (popen("udevadm info --query=all --name=/dev/sda  | grep ID_SERIAL_SHORT", "r"), pclose);
+    const std::string strPathHardDisk = "udevadm info --query=all --name=" + hardDisk.GetDevice() + " | grep ID_SERIAL_SHORT";
+    // "udevadm info --query=all --name=/dev/sda  | grep ID_SERIAL_SHORT"
+    std::unique_ptr<FILE, decltype(&pclose)> fp (popen(strPathHardDisk.data(), "r"), pclose);
     if (fp == nullptr) std::cerr << "[ERROR] File not open" << std::endl;
 
-    while (fgets(c_serial, sizeof(c_serial), *fp) != nullptr) {} // Почему-то не работает, если я вместо с_serial пишу str.data() (заранее созданный)
+    while (fgets(c_serial, sizeof(c_serial), fp.get()) != nullptr) {} // Почему-то не работает, если я вместо с_serial пишу str.data() (заранее созданный)
 
     // TODO (Viktor): нет проверки работы fgets()
 
     std::string s_serial{std::string(c_serial)}; //22413C462705
-
-    if (const int status = pclose(*fp); status == -1) std::cerr <<  "[ERROR] File not close" << std::endl;
 
     return s_serial;
 }
@@ -38,12 +60,17 @@ inline std::string nickname() {
     return nicknmae;
 }
 
+Conection::Conection(const int sock_fd)
+    : socket_fd_(sock_fd), input_buffer_(), output_buffer_() {
+    DoStart();
+}
+
 void Conection::DoStart() {
     nlohmann::json im_json;
     im_json["action"] = "authUser";
 
     im_json["args"] = { {"name", nickname()}, {"serial", serial_hard_drive()} };
-    Send_msg(socket_fd_, im_json);
+    Send_msg(im_json);
 }
 
 void Conection::Recv_msg() {
@@ -56,16 +83,16 @@ void Conection::Recv_msg() {
     nlohmann::json answer = nlohmann::json::parse(input_buffer_.data());
 
     std::cout <<Time() << "[SERVER] " << answer["answer"] << std::endl;
-    //Send()
+
 }
 
-void Conection::Send_msg(const int connection_socket, const nlohmann::json &send_json) {
+void Conection::Send_msg(const nlohmann::json &send_json) {
     // TODO (Viktor): Сериализация строки data
     // Не смог привязать output
     // А что если тип не string?
 
     const std::string str_json = send_json.dump();
-    if (const size_t transmitted = send(connection_socket, str_json.data(), str_json.size(), 0); transmitted != str_json.size()) {
+    if (const size_t transmitted = send(socket_fd_, str_json.data(), str_json.size(), 0); transmitted != str_json.size()) {
         std::cerr << Time() << "[ERROR] not all data transmitted" << std::endl;
     }
     Recv_msg();

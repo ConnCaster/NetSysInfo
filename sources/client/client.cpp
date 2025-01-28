@@ -1,4 +1,5 @@
 #include <client.h>
+#include <thread>
 
 Client::Client(const uint16_t port)
     : port_(port) {
@@ -27,7 +28,10 @@ void Client::Run() const {
     } else {
         std::cout << Time() << "[CLIENT] Connection to " << inet_ntoa(addr_.sin_addr) << ":" << ntohs(addr_.sin_port)
         << " established!" << std::endl;
-        Conection connect(sock_fd_);
+
+        std::unique_ptr<Conection> connect_ptr = std::make_unique<Conection>(sock_fd_);
     }
+
+    std::this_thread::sleep_for(std::chrono::seconds (5));
 }
 

@@ -4,6 +4,7 @@ list(APPEND ${PROJECT_NAME}_SOURCES
         client_main.cpp
         client.cpp
         cli_connection.cpp
+        ../utils.cpp
 )
 
 add_executable(start_client ${${PROJECT_NAME}_SOURCES})

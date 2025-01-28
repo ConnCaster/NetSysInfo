@@ -24,5 +24,5 @@ public:
 private:
     void DoStart();
     void Recv_msg();
-    void Send_msg(int connection_socket, const nlohmann::json &send_json);
+    void Send_msg(const nlohmann::json &send_json);
 };

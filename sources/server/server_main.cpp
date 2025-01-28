@@ -1,6 +1,5 @@
+/*
 #include "server.h"
-
-// Останавливается на методе Run
 
 int main() {
     try {
@@ -16,7 +15,7 @@ int main() {
     }
 
 
-
     return 0;
 }
+*/
 
