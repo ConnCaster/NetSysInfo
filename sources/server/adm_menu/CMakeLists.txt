@@ -7,6 +7,7 @@ list(APPEND ${PROJECT_NAME}_SOURCES
         menu.cpp
         ${CMAKE_SOURCE_DIR}/sources/fileHandler/file_handler.cpp
         ../actions/registration.cpp
+        ${CMAKE_SOURCE_DIR}/sources/utils.cpp
 )
 
 # Реализация новых executors

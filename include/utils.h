@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <unordered_set>
+#include <filesystem>
 
 // Для вывода текущего времени
 inline std::string Time(const time_t now = time(nullptr)) {
@@ -52,3 +53,4 @@ inline std::istream &operator>>(std::istream &in, MountEntry& obj) {
     return in;
 }
 
+std::filesystem::path CreateRootDir(const std::string& sub_path);

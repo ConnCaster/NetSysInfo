@@ -43,7 +43,8 @@ int ListRequest::Actions(std::vector<std::string> &requests) {
                 std::cin >> num;
             }
 
-            std::string new_path {"/home/user/Projects/C++/Client-Server/database/users/" + ExtractionName(requests[num - 1]) + ".json"};
+            auto root_path = CreateRootDir("database/users/");
+            std::string new_path{root_path.string() + ExtractionName(requests[num - 1]) + ".json"};
             try {
                 std::filesystem::rename(requests[num - 1], new_path);
             }
@@ -78,7 +79,8 @@ int ListRequest::Actions(std::vector<std::string> &requests) {
 int ListRequest::Choice() {
     // Подготовка списка
     std::vector<std::string> requests_users;
-    std::filesystem::directory_iterator iterator = std::filesystem::directory_iterator("/home/user/Projects/C++/Client-Server/database/requests/");
+    auto root_path = CreateRootDir("database/requests/");
+    std::filesystem::directory_iterator iterator = std::filesystem::directory_iterator(root_path);
 
     for (; iterator != std::filesystem::end(iterator); iterator++) {
         requests_users.push_back(iterator->path().string());
@@ -136,7 +138,8 @@ int ListUsers::Actions(std::vector<std::string> &user) {
 int ListUsers::Choice() {
     // Подготовка списка
     std::vector<std::string> list_users;
-    std::filesystem::directory_iterator iterator = std::filesystem::directory_iterator("/home/user/Projects/C++/Client-Server/database/users/");
+    auto root_path = CreateRootDir("database/users/");
+    std::filesystem::directory_iterator iterator = std::filesystem::directory_iterator(root_path);
 
     for (; iterator != std::filesystem::end(iterator); iterator++) {
         list_users.push_back(iterator->path().string());
