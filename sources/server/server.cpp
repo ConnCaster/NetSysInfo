@@ -54,7 +54,7 @@ Server::Server(uint16_t port)
 void Server::Run() {
     // Работа с клиентом
     socklen_t addr_len = sizeof(addr_);
-    while ((client_socket_ = accept(sock_fd_, reinterpret_cast<struct sockaddr *>(&addr_), &addr_len))) {
+    client_socket_ = accept(sock_fd_, reinterpret_cast<struct sockaddr *>(&addr_), &addr_len);
         // Accept() используется для принятия запроса на соединение,
         // полученного в сокете, который прослушивало приложение.
         if (client_socket_ == -1) {
@@ -62,12 +62,9 @@ void Server::Run() {
             return;
         }
 
-        // Если подключится клиент, выводим уведомление
-        std::cout << Time() << "[SERVER] Accepted new connection from client with an " << inet_ntoa(addr_.sin_addr)
-                  << ":" << ntohs(addr_.sin_port) << std::endl;
+    // Если подключится клиент, выводим уведомление
+    std::cout << Time() << "[SERVER] Accepted new connection from client with an " << inet_ntoa(addr_.sin_addr)
+              << ":" << ntohs(addr_.sin_port) << std::endl;
 
-        Conection conect(Get_client_socket_());
-
-    }
-
+    Conection conect(Get_client_socket_());
 }

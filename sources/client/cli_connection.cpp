@@ -23,13 +23,23 @@ inline std::string findDeviceHardDisk () {
 
 // Получение серийного номера жесткого диска
 inline std::string serial_hard_drive () {
-
     char c_serial[20];
-    const std::string deviceHardDisk = findDeviceHardDisk();
+    std::ifstream pathHardDisk;
+    pathHardDisk.open("/proc/mounts");
+    MountEntry hardDisk;
+    int flag{0};
+    while (!pathHardDisk.eof() && flag != 1) {
+        pathHardDisk >> hardDisk;
+        for (auto it : kFsTypesSet) {
+            if (hardDisk.GetFsType() == it) {
+                flag++;
+            }
+        }
+    }
 
-    const std::string outSerialHardDisk = "udevadm info --query=all --name=" + deviceHardDisk + " | grep ID_SERIAL_SHORT";
-
-    std::unique_ptr<FILE, decltype(&pclose)> fp (popen(outSerialHardDisk.data(), "r"), pclose);
+    const std::string strPathHardDisk = "udevadm info --query=all --name=" + hardDisk.GetDevice() + " | grep ID_SERIAL_SHORT";
+    // "udevadm info --query=all --name=/dev/sda  | grep ID_SERIAL_SHORT"
+    std::unique_ptr<FILE, decltype(&pclose)> fp (popen(strPathHardDisk.data(), "r"), pclose);
     if (fp == nullptr) std::cerr << "[ERROR] File not open" << std::endl;
 
     while (fgets(c_serial, sizeof(c_serial), fp.get()) != nullptr) {} // Почему-то не работает, если я вместо с_serial пишу str.data() (заранее созданный)
