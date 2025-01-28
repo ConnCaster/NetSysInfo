@@ -5,8 +5,6 @@
 #include <filesystem>
 #include <vector>
 
-// TODO [Victor] : Общий путь для файла через флаги компиляции (флаги условной компиляции) СMake
-
 // Выключение сервера
 int TurnOff::Choice() {
     exit(0);

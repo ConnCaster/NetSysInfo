@@ -6,7 +6,11 @@
 class Menu {
 public:
     virtual int Choice() = 0;
+<<<<<<< HEAD
     virtual ~Menu() = default;
+=======
+    ~Menu() = default;
+>>>>>>> 4306261216db8717a19a9653225e0fabff35af45
 };
 
 class ListRequest : public Menu{
