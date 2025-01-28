@@ -1,26 +1,15 @@
 #pragma once
 
-#include <iostream>
-#include <unordered_set>
 #include <filesystem>
 
+
 // Для вывода текущего времени
-inline std::string Time(const time_t now = time(nullptr)) {
-    const tm *ltm {localtime(&now)};
-    return "[" + std::to_string(ltm->tm_mday) + ":" + std::to_string(ltm->tm_mon) + ":" + std::to_string(1900 + ltm->tm_year) +
-        " " + std::to_string(ltm->tm_hour) + ":" + std::to_string(ltm->tm_min) + ":" + std::to_string(ltm->tm_sec) + "] ";
-}
+std::string Time(const std::time_t now = std::time(nullptr));
 
 // Для корректировки имени
-inline std::string ExtractionName (const std::string& path) {
-    int sizeName = path.size() - (path.find_last_of("/") + (path.size() - path.find(".json") + 1));
+std::string ExtractionName (const std::string& path);
 
-    return path.substr(path.find_last_of("/") + 1,sizeName);
-}
-
-// Для нахождени расположения ЖД
-const std::unordered_set<std::string> kFsTypesSet{"ext2", "ext3", "ext4"};
-
+// Для получения данных о ЖД
 class MountEntry {
 public:
     MountEntry() = default;
@@ -53,4 +42,5 @@ inline std::istream &operator>>(std::istream &in, MountEntry& obj) {
     return in;
 }
 
+// Для создания общего пути
 std::filesystem::path CreateRootDir(const std::string& sub_path);
