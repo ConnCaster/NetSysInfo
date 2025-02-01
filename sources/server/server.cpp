@@ -55,12 +55,12 @@ void Server::Run() {
     // Работа с клиентом
     socklen_t addr_len = sizeof(addr_);
     client_socket_ = accept(sock_fd_, reinterpret_cast<struct sockaddr *>(&addr_), &addr_len);
-        // Accept() используется для принятия запроса на соединение,
-        // полученного в сокете, который прослушивало приложение.
-        if (client_socket_ == -1) {
-            std::cerr << Time() << "[ERROR] Accept error" << std::endl;
-            return;
-        }
+    // Accept() используется для принятия запроса на соединение,
+    // полученного в сокете, который прослушивало приложение.
+    if (client_socket_ == -1) {
+        std::cerr << Time() << "[ERROR] Accept error" << std::endl;
+        return;
+    }
 
     // Если подключится клиент, выводим уведомление
     std::cout << Time() << "[SERVER] Accepted new connection from client with an " << inet_ntoa(addr_.sin_addr)

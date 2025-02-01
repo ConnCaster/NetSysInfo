@@ -17,7 +17,9 @@ private:
 public:
     explicit Client(uint16_t port);
 
-    void Run() const;
+    void Run() ;
+
+    int SetSockFd();
 
     ~Client() {
         close(sock_fd_);

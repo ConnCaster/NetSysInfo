@@ -21,17 +21,24 @@ Client::Client(const uint16_t port)
 
 }
 
-void Client::Run() const {
+void Client::Run()  {
     // Соеденение с сервером
-    if (const int ret = connect(sock_fd_, reinterpret_cast<const struct sockaddr*>(&addr_),sizeof(addr_)); ret == -1) {
-        std::cerr << Time() << "[ERROR] Connection ERROR to " << inet_ntoa(addr_.sin_addr) << std::endl;
-    } else {
-        std::cout << Time() << "[CLIENT] Connection to " << inet_ntoa(addr_.sin_addr) << ":" << ntohs(addr_.sin_port)
-        << " established!" << std::endl;
+    while (true) {
+        int ret = connect(sock_fd_, reinterpret_cast<const struct sockaddr*>(&addr_),sizeof(addr_));
+        if (ret == -1) {
+            std::cerr << Time() << "[ERROR] Connection ERROR to " << inet_ntoa(addr_.sin_addr) << std::endl;
+        } else {
+            std::cout << Time() << "[CLIENT] Connection to " << inet_ntoa(addr_.sin_addr) << ":" << ntohs(addr_.sin_port)
+            << " established!" << std::endl;
 
-        std::unique_ptr<Conection> connect_ptr = std::make_unique<Conection>(sock_fd_);
+            std::unique_ptr<Conection> connect_ptr = std::make_unique<Conection>(sock_fd_);
+        }
+        std::this_thread::sleep_for(std::chrono::seconds (5));
+
+        sock_fd_ = (socket(AF_INET, SOCK_STREAM, 0));
+        if (sock_fd_ == -1) {
+            std::cerr << Time() << "[ERROR] Socket()" << std::endl;
+        }
     }
-
-    std::this_thread::sleep_for(std::chrono::seconds (5));
 }
 

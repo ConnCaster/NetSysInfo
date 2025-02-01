@@ -3,7 +3,7 @@
 
 int main() {
     try {
-        const Client client(5000);
+        Client client(5000);
         client.Run();
 
     }
