@@ -1,7 +1,11 @@
 #include "menu.h"
 
+#include <thread>
 
-int main() {
+std::mutex mtx;
+
+void menu() {
+    mtx.lock();
     int adm_choice {-1};
     while (adm_choice != 0) {
         std::cout << "\nPlease, select the appropriate item from the list below:\n"
@@ -9,9 +13,20 @@ int main() {
         << "3. Display the list of users\n" << ">> ";
         std::cin >> adm_choice;
         if (const auto choice_main = MenuFactory::ChoiceFact(adm_choice)) {
+            mtx.unlock();
             choice_main->Choice();
         }
     }
+}
+
+
+int main() {
+
+    std::thread start (menu);
+    std::thread menu_upravleniya (menu);
+
+    menu_upravleniya.join();
+    start.join();
 
     return 0;
 }
