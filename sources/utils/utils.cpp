@@ -1,5 +1,4 @@
 #include "utils.h"
-#include <iostream>
 
 // Для вывода текущего времени
 std::string Time(const std::time_t now) {

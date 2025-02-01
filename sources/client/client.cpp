@@ -1,5 +1,11 @@
+#include <iostream>
 #include <client.h>
 #include <thread>
+#include <arpa/inet.h>
+
+#include "cli_connection.h"
+#include "utils.h"
+
 
 Client::Client(const uint16_t port)
     : port_(port) {

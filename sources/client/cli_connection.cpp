@@ -1,7 +1,10 @@
-#include "cli_connection.h"
-
+#include <iostream>
 #include <unordered_set>
 #include <fstream>
+
+#include "cli_connection.h"
+#include "utils.h"
+
 
 // TODO (Viktor): Добавить деструктор для unique (decltype) Прочитать про это в книжке "42 совета ..."
 

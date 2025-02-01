@@ -1,10 +1,8 @@
 #pragma once
 
-#include <iostream>
 #include <unistd.h>
 #include <nlohmann/json.hpp>
 #include <sys/socket.h>
-#include "utils.h"
 
 constexpr unsigned int buf_size = 512;
 

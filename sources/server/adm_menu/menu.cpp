@@ -1,6 +1,6 @@
-#include "menu.h"
-
 #include <thread>
+
+#include "menu.h"
 
 std::mutex mtx;
 

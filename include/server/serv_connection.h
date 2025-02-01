@@ -1,14 +1,15 @@
 #pragma once
 
-#include <iostream>
+#include <fstream>
 #include <nlohmann/json.hpp>
 #include <sys/socket.h>
-#include "factory.h"
+
 
 constexpr unsigned int buf_size = 512;
 
 class Conection {
 private:
+    std::fstream log;
     int connection_socket_{0};
     int socket_fd_{0};
     std::array<unsigned char, buf_size> input_buffer_;

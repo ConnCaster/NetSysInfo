@@ -1,10 +1,9 @@
 #pragma once
 
 #include <iostream>
-#include <memory>
 #include <vector>
+#include <memory>
 
-#include "utils.h"
 
 class Menu {
 public:

@@ -1,5 +1,6 @@
 #pragma once
-#include "server.h"
+#include <nlohmann/json_fwd.hpp>
+
 
 class Action {
 public:

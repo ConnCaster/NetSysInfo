@@ -1,12 +1,7 @@
 #pragma once
-#include <iostream>
 #include <unistd.h>
-#include <sys/socket.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
 #include <nlohmann/json.hpp>
-#include "utils.h"
-#include "cli_connection.h"
 
 
 class Client {

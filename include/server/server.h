@@ -1,20 +1,13 @@
 #pragma once
-#include <iostream>
-#include <arpa/inet.h>
-#include <sys/socket.h>    // Для использования Socket()
 #include <netinet/in.h>    // Для использования sockaddr_in
-#include <ctime>           // Для определения даты и времени
-#include <fstream>          // Чтобы работать с файлами
+#include <fstream>
 #include <unistd.h>
-#include <nlohmann/json.hpp> // Для использования JSON
-#include "file_handler.h"
-#include "factory.h"
-#include "serv_connection.h"
-#include "utils.h"
+
 
 
 class Server {
 private:
+    std::fstream log;
     uint16_t port_;
     struct sockaddr_in addr_{};
     int sock_fd_;
@@ -28,7 +21,9 @@ public:
         return client_socket_;
     }
 
+
     ~Server() {
+        log.close();
         close(sock_fd_);
     }
 };
