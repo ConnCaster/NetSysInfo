@@ -4,7 +4,7 @@
 
 std::mutex mtx;
 
-void menu() {
+void menuAdministratora() {
     mtx.lock();
     int adm_choice {-1};
     while (adm_choice != 0) {
@@ -19,14 +19,13 @@ void menu() {
     }
 }
 
-
 int main() {
 
-    std::thread start (menu);
-    std::thread menu_upravleniya (menu);
+    std::thread start_server(menuAdministratora);
+    std::thread managment_menu (menuAdministratora);
 
-    menu_upravleniya.join();
-    start.join();
+    managment_menu.join();
+    start_server.join();
 
     return 0;
 }
