@@ -1,5 +1,10 @@
-#include "cli_connection.h"
+#include <iostream>
+#include <unordered_set>
 #include <fstream>
+
+#include "cli_connection.h"
+#include "utils.h"
+
 
 // TODO (Viktor): Добавить деструктор для unique (decltype) Прочитать про это в книжке "42 совета ..."
 
@@ -13,6 +18,7 @@ inline std::string findDeviceHardDisk () {
 
     while (!pathHardDisk.eof()) {
         pathHardDisk >> hardDisk;
+        const std::unordered_set<std::string> kFsTypesSet{"ext2", "ext3", "ext4"};
         for (auto it : kFsTypesSet) {
             if (hardDisk.GetFsType() == it) {
                 return hardDisk.GetDevice();
@@ -24,22 +30,10 @@ inline std::string findDeviceHardDisk () {
 // Получение серийного номера жесткого диска
 inline std::string serial_hard_drive () {
     char c_serial[20];
-    std::ifstream pathHardDisk;
-    pathHardDisk.open("/proc/mounts");
-    MountEntry hardDisk;
-    int flag{0};
-    while (!pathHardDisk.eof() && flag != 1) {
-        pathHardDisk >> hardDisk;
-        for (auto it : kFsTypesSet) {
-            if (hardDisk.GetFsType() == it) {
-                flag++;
-            }
-        }
-    }
 
-    const std::string strPathHardDisk = "udevadm info --query=all --name=" + hardDisk.GetDevice() + " | grep ID_SERIAL_SHORT";
-    // "udevadm info --query=all --name=/dev/sda  | grep ID_SERIAL_SHORT"
+    const std::string strPathHardDisk = "udevadm info --query=all --name=" + findDeviceHardDisk() + " | grep ID_SERIAL_SHORT";
     std::unique_ptr<FILE, decltype(&pclose)> fp (popen(strPathHardDisk.data(), "r"), pclose);
+
     if (fp == nullptr) std::cerr << "[ERROR] File not open" << std::endl;
 
     while (fgets(c_serial, sizeof(c_serial), fp.get()) != nullptr) {} // Почему-то не работает, если я вместо с_serial пишу str.data() (заранее созданный)

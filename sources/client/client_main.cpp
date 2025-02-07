@@ -1,11 +1,12 @@
+#include <iostream>
+
 #include "client.h"
 
 
 int main() {
     try {
-        const Client client(5000);
+        Client client(5000);
         client.Run();
-
     }
     catch (const std::runtime_error err) {
         std::cerr << err.what() << std::endl;

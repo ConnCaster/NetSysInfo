@@ -1,16 +1,26 @@
+#include <utils.h>
+#include <arpa/inet.h>
+
+#include "serv_connection.h"
 #include "server.h"
+
 
 // Сборка сервера
 Server::Server(uint16_t port)
     : port_(port) {
+
+    // Для записи дествий сервера
+    auto root_path_log = CreateRootDir("../../../log/server.txt");
+    log.open(root_path_log, std::ios::in | std::ios::out | std::ios::app);
+
     // Файловый дескриптор сокета
     sock_fd_ = socket(AF_INET, SOCK_STREAM, 0);
     // AF_INET указывает семейство протоколов IPv4
     // SOCK_STREAM опрделяет тип сокета TCP
     // 0 - протокол по умолчанию
 
-    if (sock_fd_== -1) {
-        std::cerr << Time() << "[ERROR] Socket()" << std::endl;
+    if (sock_fd_ == -1) {
+        log << Time() << "[ERROR] Socket()" << std::endl;
         throw std::runtime_error("[ERROR] Socket()");
     }
 
@@ -19,7 +29,7 @@ Server::Server(uint16_t port)
     constexpr int optval = 1;
     int ret = setsockopt(sock_fd_, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
     if (ret == -1) {
-        std::cerr << Time() << "[ERROR] Setsockopt error" << std::endl;
+        log << Time() << "[ERROR] Setsockopt error" << std::endl;
         throw std::runtime_error("[ERROR] Setsockopt error");
     }
 
@@ -36,7 +46,7 @@ Server::Server(uint16_t port)
     ret = bind(sock_fd_, reinterpret_cast<const struct sockaddr*>(&addr_), sizeof(addr_));
     // reinterpret_cast - для преобразования указателя на sockaddr_in в указатель sockaddr
     if (ret == -1) {
-        std::cerr << Time() << "[ERROR] Bind error" << std::endl;
+        log << Time() << "[ERROR] Bind error" << std::endl;
         throw std::runtime_error("[ERROR] Bind error");
     }
 
@@ -45,26 +55,28 @@ Server::Server(uint16_t port)
     // sock_fd - какой сокет слушать
     // 5 - сколько запросов на подключение может быть помещены в очередь, прежде чем будут отклонены дальнейшие запросы
     if (ret == -1) {
-        std::cerr << Time() << "[ERROR] Listen error" << std::endl;
+        log << Time() << "[ERROR] Listen error" << std::endl;
         throw std::runtime_error("[ERROR] Listen error");
     }
 }
 
 // Запуск сервера
 void Server::Run() {
-    // Работа с клиентом
-    socklen_t addr_len = sizeof(addr_);
-    client_socket_ = accept(sock_fd_, reinterpret_cast<struct sockaddr *>(&addr_), &addr_len);
+    while (true) {
+        // Работа с клиентом
+        socklen_t addr_len = sizeof(addr_);
+        client_socket_ = accept(sock_fd_, reinterpret_cast<struct sockaddr *>(&addr_), &addr_len);
         // Accept() используется для принятия запроса на соединение,
         // полученного в сокете, который прослушивало приложение.
         if (client_socket_ == -1) {
-            std::cerr << Time() << "[ERROR] Accept error" << std::endl;
+            log << Time() << "[ERROR] Accept error" << std::endl;
             return;
         }
 
-    // Если подключится клиент, выводим уведомление
-    std::cout << Time() << "[SERVER] Accepted new connection from client with an " << inet_ntoa(addr_.sin_addr)
-              << ":" << ntohs(addr_.sin_port) << std::endl;
+        // Если подключится клиент, выводим уведомление
+        log << Time() << "[SERVER] Accepted new connection from client with an " << inet_ntoa(addr_.sin_addr)
+                  << ":" << ntohs(addr_.sin_port) << std::endl;
 
-    Conection conect(Get_client_socket_());
+        Conection conect(Get_client_socket_());
+    }
 }
