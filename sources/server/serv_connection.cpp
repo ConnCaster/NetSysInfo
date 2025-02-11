@@ -1,4 +1,5 @@
 #include "serv_connection.h"
+#include "request_handler.h"
 #include "utils.h"
 #include "factory.h"
 
@@ -25,27 +26,26 @@ void Conection::Recv_msg() {
         return;
     }
 
-    // Парс JSON
-    nlohmann::json cli_json = nlohmann::json::parse(input_buffer_.data());
-    std::string action_str{};
-
     try {
-        action_str = cli_json["action"].get<std::string>();
+        std::unique_ptr<ReqHandler> req_handler_ptr = std::make_unique<ReqHandler>(input_buffer_);
     } catch (...) {
-        return;
+        // TODO: подумать об обработке Exception.
+        //  Можно ли продолжать исполнение,
+        //  если handler не сконструировался и данные не обработались
     }
+
 
     // Обработка действия
-    if (const auto action = ActionFactory::ActionFact(action_str)) {
-        nlohmann::json answer;
-        if( action->execute(cli_json)) {
-            answer["answer"] = "You have successfully registered";
-            Send_msg(answer);
-        } else {
-            answer["answer"] = "There is already such a user";
-            Send_msg(answer);
-        }
-    }
+//    if (const auto action = ActionFactory::ActionFact(action_str)) {
+//        nlohmann::json answer;
+//        if( action->execute(cli_json)) {
+//            answer["answer"] = "You have successfully registered";
+//            Send_msg(answer);
+//        } else {
+//            answer["answer"] = "There is already such a user";
+//            Send_msg(answer);
+//        }
+//    }
     //Send_msg();
 }
 

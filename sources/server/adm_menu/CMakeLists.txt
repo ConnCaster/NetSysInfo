@@ -9,6 +9,7 @@ list(APPEND ${PROJECT_NAME}_SOURCES
         requests.cpp
         ${CMAKE_SOURCE_DIR}/sources/utils/utils.cpp
         ${CMAKE_SOURCE_DIR}/sources/server/server.cpp
+        ${CMAKE_SOURCE_DIR}/sources/server/request_handler.cpp
         ${CMAKE_SOURCE_DIR}/sources/server/serv_connection.cpp
         ${CMAKE_SOURCE_DIR}/sources/fileHandler/file_handler.cpp
         ${CMAKE_SOURCE_DIR}/sources/server/actions/registration.cpp
