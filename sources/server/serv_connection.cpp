@@ -26,10 +26,9 @@ void Conection::Recv_msg() {
     }
 
     // Парс JSON
-
     nlohmann::json cli_json = nlohmann::json::parse(input_buffer_.data());
-
     std::string action_str{};
+
     try {
         action_str = cli_json["action"].get<std::string>();
     } catch (...) {
@@ -52,12 +51,10 @@ void Conection::Recv_msg() {
 
 void Conection::Send_msg(const nlohmann::json &send_json) {
     // TODO (Viktor): Сериализация строки data
-    // Не смог привязать output
-    // А что если тип не string?
 
-    const std::string str_json = send_json.dump();
+    SetOutputBuffer(send_json.dump());
 
-    if (const size_t transmitted = send(connection_socket_, str_json.data(), str_json.size(), 0); transmitted != str_json.size()) {
+    if (const size_t transmitted = send(connection_socket_, output_buffer_.data(), output_buffer_.size(), 0); transmitted != output_buffer_.size()) {
     log << Time() << "[ERROR] not all data transmitted" << std::endl;
     }
     //Recv_msg()
