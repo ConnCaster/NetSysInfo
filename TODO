@@ -1,0 +1,3 @@
+- В utils.cpp: обрезать curr_path до директории Client-Server
+- В Client: - зациклить одно подключение (т.е. не разрывать подключение) и перенести std::this_thread::sleep_for() в cli_connection
+            -
