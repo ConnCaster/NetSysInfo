@@ -31,11 +31,13 @@ std::string ExtractionName (const std::string& path) {
  *          "database/request/" -> "/home/user/dir/database/request/"
  */
 std::filesystem::path CreateRootDir(const std::string& sub_path) {
-    auto curr_path = std::filesystem::current_path();
+    auto curr_path = std::filesystem::path("/home/user/Projects/C++/Client-Server/cmake-build-debug");
+
     curr_path /= sub_path;
     if (!exists(curr_path)) {
         std::filesystem::create_directories(curr_path);
     }
+
     return curr_path;
 }
 

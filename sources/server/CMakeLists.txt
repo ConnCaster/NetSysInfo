@@ -5,6 +5,7 @@ list(APPEND ${PROJECT_NAME}_SOURCES
         server.cpp
         adm_menu/menu.cpp
         serv_connection.cpp
+        actions/member_info.cpp
         actions/registration.cpp
         ${CMAKE_SOURCE_DIR}/sources/utils/utils.cpp
         ${CMAKE_SOURCE_DIR}/sources/fileHandler/file_handler.cpp

@@ -23,7 +23,6 @@ constexpr std::string_view kResponseKey = "response";
 class ReqHandler {
 public:
     ReqHandler(const std::array<unsigned char, kBufSize>& buffer);
-
 private:
     void DoHandle();
 private:

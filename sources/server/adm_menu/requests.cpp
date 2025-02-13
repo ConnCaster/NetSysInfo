@@ -59,7 +59,7 @@ int ListRequest::Actions(std::vector<std::string> &list_requests) {
 int ListRequest::Choice() {
     // Подготовка списка
     std::vector<std::string> requests_users;
-    auto root_path_requests = CreateRootDir("../../../database/requests/");
+    auto root_path_requests = CreateRootDir("database/requests/");
     std::filesystem::directory_iterator iterator = std::filesystem::directory_iterator(root_path_requests);
 
     for (; iterator != std::filesystem::end(iterator); iterator++) {

@@ -38,7 +38,7 @@ int ListUsers::Actions(std::vector<std::string> &list_user) {
 int ListUsers::Choice() {
     // Подготовка списка
     std::vector<std::string> list_users;
-    auto root_path_users = CreateRootDir("../../../database/users/");
+    auto root_path_users = CreateRootDir("database/users/");
     std::filesystem::directory_iterator iterator = std::filesystem::directory_iterator(root_path_users);
 
     for (; iterator != std::filesystem::end(iterator); iterator++) {

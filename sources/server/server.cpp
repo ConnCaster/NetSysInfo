@@ -10,8 +10,8 @@ Server::Server(uint16_t port)
     : port_(port) {
 
     // Для записи дествий сервера
-    auto root_path_log = CreateRootDir("../../../log/server.txt");
-    log.open(root_path_log, std::ios::in | std::ios::out | std::ios::app);
+    auto root_path_log = CreateRootDir("log/");
+    log.open(root_path_log.string() + "server.txt", std::ios::in | std::ios::out | std::ios::app);
 
     // Файловый дескриптор сокета
     sock_fd_ = socket(AF_INET, SOCK_STREAM, 0);

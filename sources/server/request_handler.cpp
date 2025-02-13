@@ -1,11 +1,13 @@
 #include "request_handler.h"
+#include "serv_connection.h"
+
+#include <factory.h>
 
 ReqHandler::ReqHandler(const std::array<unsigned char, 512> &buffer)
     : input_buffer_(buffer)
 {
 
     j_input_buffer_ = nlohmann::json::parse(input_buffer_.data());
-    std::string action_str{};
     DoHandle();
 }
 
@@ -40,10 +42,20 @@ ReqHandler::ReqHandler(const std::array<unsigned char, 512> &buffer)
  *          }
  */
 void ReqHandler::DoHandle() {
-    json j_response = json::object({{"key", "value"}, {"key", "value"}});
+    json j_response = json::object({{"id_cmd"}, {"response"}});
+
     if (!j_input_buffer_.contains(kDataKey)) {
-        // TODO: авторизация
-    } else {
-        // TODO: проверка учетных данных + обработка ответа
+        if (const auto action = ActionFactory::ActionFact(1)) {
+            if( action->execute(j_input_buffer_)) {
+                j_response["response"] = "Your registration request has been accepted";
+                //Send_msg(j_response);
+            } else {
+                j_response["id_cmd"] = 1;
+                j_response["answer"] = "There is already such a user";
+                //Send_msg(answer);
+            }
+        } else {
+            // TODO: проверка учетных данных + обработка ответа
+        }
     }
 }
