@@ -12,6 +12,7 @@ list(APPEND ${PROJECT_NAME}_SOURCES
         ${CMAKE_SOURCE_DIR}/sources/server/request_handler.cpp
         ${CMAKE_SOURCE_DIR}/sources/server/serv_connection.cpp
         ${CMAKE_SOURCE_DIR}/sources/fileHandler/file_handler.cpp
+        ${CMAKE_SOURCE_DIR}/sources/server/actions/member_info.cpp
         ${CMAKE_SOURCE_DIR}/sources/server/actions/registration.cpp
 )
 

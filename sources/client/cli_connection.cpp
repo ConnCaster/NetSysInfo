@@ -11,12 +11,9 @@ Conection::Conection(const int sock_fd)
 }
 
 void Conection::DoStart() {
-
-    nlohmann::json im_json;
-    im_json["action"] = "authUser";
-
-    im_json["args"] = { {"name", Nickname()}, {"serial", SerialHardDdrive()} };
-    SendMsg(im_json);
+    json j_response;
+    j_response["auth"] = { {"name", Nickname()}, {"serial_hard_disk", SerialHardDdrive()} };
+    SendMsg(j_response);
 }
 
 void Conection::RecvMsg() {
@@ -25,15 +22,17 @@ void Conection::RecvMsg() {
         std::cerr << Time() << "[ERROR] Error recv()" << std::endl;
         return;
     }
-
     // Парс JSON
-    nlohmann::json answer = nlohmann::json::parse(input_buffer_.data());
+    json j_server = nlohmann::json::parse(input_buffer_.data());
+    if (""/*Придумать условие для проверки "Пришел ли запросы от сервера на выполнение задачи"*/);
 
+    /*
     std::cout <<Time() << "[SERVER] " << answer["answer"] << std::endl;
+    */
 
 }
 
-void Conection::SendMsg(const nlohmann::json &send_json) {
+void Conection::SendMsg(const json &send_json) {
 
     SetOutputBuffer(send_json.dump());
     if (const size_t transmitted = send(socket_fd_, output_buffer_.data(), output_buffer_.size(), 0); transmitted != output_buffer_.size()) {

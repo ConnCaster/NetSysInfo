@@ -4,6 +4,8 @@
 #include <nlohmann/json.hpp>
 #include <sys/socket.h>
 
+using json = nlohmann::json;
+
 constexpr unsigned int buf_size = 512;
 
 class Conection {
@@ -26,5 +28,5 @@ public:
 private:
     void DoStart();
     void RecvMsg();
-    void SendMsg(const nlohmann::json &send_json);
+    void SendMsg(const json &send_json);
 };
