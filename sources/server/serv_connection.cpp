@@ -1,7 +1,6 @@
 #include "serv_connection.h"
 #include "request_handler.h"
 #include "utils.h"
-#include "factory.h"
 
 
 
@@ -14,6 +13,7 @@ Conection::Conection(const int client_socket)
 
 
     DoStart();
+
 }
 
 void Conection::DoStart() {
@@ -28,14 +28,15 @@ void Conection::Recv_msg() {
     }
 
     try {
-        std::unique_ptr<ReqHandler> req_handler_ptr = std::make_unique<ReqHandler>(input_buffer_);
-    } catch (...) {
+        const auto req_handler_ptr {std::make_unique<ReqHandler>(input_buffer_)};
+        Send_msg(req_handler_ptr->GetResponse());
+    } catch (const std::exception& err)  {
+
+        int flag = 1;
         // TODO: подумать об обработке Exception.
         //  Можно ли продолжать исполнение,
         //  если handler не сконструировался и данные не обработались
     }
-
-    //Send_msg();
 }
 
 void Conection::Send_msg(const nlohmann::json &send_json) {

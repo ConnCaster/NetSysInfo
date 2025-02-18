@@ -4,6 +4,7 @@
 
 using json = nlohmann::json;
 
+
 bool MemberInfo::execute(json &j_cli_json) {
     auto member_size = j_cli_json["response"].get<unsigned int>();
     while (member_size / 1000000) {
@@ -16,5 +17,6 @@ bool MemberInfo::execute(json &j_cli_json) {
     j_input_data["member"] = j_cli_json["response"].get<std::string>();
 
     FileDB file_db(user);
-    file_db.write(j_input_data);;
+    file_db.write(j_input_data);
+    return true;
 }

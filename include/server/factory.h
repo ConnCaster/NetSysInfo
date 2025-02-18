@@ -13,7 +13,7 @@ public:
     bool execute(nlohmann::json& j) override;
 };
 
-class MemberInfo : public Action {
+class MemberInfo  : public Action {
 public:
     bool execute(nlohmann::json& j) override;
 };
@@ -21,9 +21,11 @@ public:
 class ActionFactory {
 public:
     static auto ActionFact(const int& id_cmd) {
-        switch (id_cmd)
+        switch (id_cmd) {
             case 1:
-            return std::unique_ptr<Action>(new Registration());
+                return std::unique_ptr<Action>(std::make_unique<Registration>());
+            case 2:
+                return std::unique_ptr<Action>(std::make_unique<MemberInfo>());
         }
     }
 };

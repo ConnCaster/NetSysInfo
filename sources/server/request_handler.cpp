@@ -3,11 +3,9 @@
 
 #include <factory.h>
 
-ReqHandler::ReqHandler(const std::array<unsigned char, 512> &buffer)
-    : input_buffer_(buffer)
+ReqHandler::ReqHandler(const std::array<unsigned char, buf_size>& buffer)
 {
-
-    j_input_buffer_ = nlohmann::json::parse(input_buffer_.data());
+    j_input_buffer_ = nlohmann::json::parse(buffer.data());
     DoHandle();
 }
 
@@ -42,20 +40,18 @@ ReqHandler::ReqHandler(const std::array<unsigned char, 512> &buffer)
  *          }
  */
 void ReqHandler::DoHandle() {
-    json j_response = json::object({{"id_cmd"}, {"response"}});
 
     if (!j_input_buffer_.contains(kDataKey)) {
-        if (const auto action = ActionFactory::ActionFact(1)) {
-            if( action->execute(j_input_buffer_)) {
-                j_response["response"] = "Your registration request has been accepted";
-                //Send_msg(j_response);
-            } else {
-                j_response["id_cmd"] = 1;
-                j_response["answer"] = "There is already such a user";
-                //Send_msg(answer);
-            }
+        const auto action = ActionFactory::ActionFact(1);
+        if (action->execute(j_input_buffer_)) {
+            j_output_buffer[kResponseKey] = "Your registration request has been accepted";
         } else {
-            // TODO: проверка учетных данных + обработка ответа
+            j_output_buffer[kResponseKey] = "There is already such a user";
+            j_output_buffer[kIdKey] = 2;
         }
+    } else {
+        const auto action = ActionFactory::ActionFact(j_input_buffer_["data"].size());
+        action->execute(j_input_buffer_);
+        j_output_buffer[kIdKey] = j_input_buffer_["data"].size() + 1;
     }
 }
