@@ -2,7 +2,9 @@
 #include <iostream>
 
 #include "cli_connection.h"
+#include "c_request_handler.h"
 #include "utils.h"
+#include "c_factory.h"
 
 
 Conection::Conection(const int sock_fd)
@@ -11,9 +13,9 @@ Conection::Conection(const int sock_fd)
 }
 
 void Conection::DoStart() {
-    json j_response;
-    j_response["auth"] = { {"name", Nickname()}, {"serial_hard_disk", SerialHardDdrive()} };
-    SendMsg(j_response);
+    const auto auth_ptr {std::make_unique<Authentication>()};
+    std::cout << auth_ptr->execute();
+    SendMsg(auth_ptr->execute());
 }
 
 void Conection::RecvMsg() {
@@ -24,12 +26,11 @@ void Conection::RecvMsg() {
     }
     // Парс JSON
     json j_server = nlohmann::json::parse(input_buffer_.data());
-    if (""/*Придумать условие для проверки "Пришел ли запросы от сервера на выполнение задачи"*/);
-
-    /*
-    std::cout <<Time() << "[SERVER] " << answer["answer"] << std::endl;
-    */
-
+    if (j_server.contains(kIdKey)) {
+        const auto req_handler_ptr {std::make_unique<ReqHandler>(input_buffer_)};
+        std::cout << req_handler_ptr->GetResponse();
+        SendMsg(req_handler_ptr->GetResponse());
+    }
 }
 
 void Conection::SendMsg(const json &send_json) {
@@ -40,5 +41,20 @@ void Conection::SendMsg(const json &send_json) {
     }
     RecvMsg();
 }
+
+int Conection::index_null_ter_() {
+    int it{0};
+    if (output_buffer_[it] != '\000') {
+        while (output_buffer_[it] != '\000') {
+            it++;
+        }
+        output_buffer_[it - 1] = ',';
+        return it;
+    } else {
+        return it;
+    }
+}
+
+
 
 

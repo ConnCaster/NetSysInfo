@@ -20,12 +20,12 @@ public:
 
 class ActionFactory {
 public:
-    static auto ActionFact(const int& id_cmd) {
+    static std::unique_ptr<Action> ActionFact(const int& id_cmd) {
         switch (id_cmd) {
             case 1:
-                return std::unique_ptr<Action>(std::make_unique<Registration>());
+                return std::make_unique<Registration>();
             case 2:
-                return std::unique_ptr<Action>(std::make_unique<MemberInfo>());
+                return std::make_unique<MemberInfo>();
         }
     }
 };

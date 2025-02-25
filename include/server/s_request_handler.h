@@ -20,6 +20,10 @@ constexpr std::string_view kSerialHardDiskKey = "serial_hard_disk";
 constexpr std::string_view kIdKey = "id_cmd";
 constexpr std::string_view kResponseKey = "response";
 
+// индификаторы команд
+constexpr int id_cmd_registration {1};
+constexpr int id_cmd_member_info {2};
+
 class ReqHandler {
 public:
     explicit ReqHandler(const std::array<unsigned char, kBufSize>& buffer);
@@ -31,7 +35,7 @@ private:
     void DoHandle();
 private:
     json j_input_buffer_;
-    json j_output_buffer = json::object({{kIdKey}, {kResponseKey}});
+    json j_output_buffer ;
 };
 
 #endif //CLIENT_SERVER_REQUEST_HANDLER_H

@@ -4,12 +4,15 @@ list(APPEND ${PROJECT_NAME}_SOURCES
         client.cpp
         client_main.cpp
         cli_connection.cpp
+        c_request_handler.cpp
+        actions/member_info.cpp
+        actions/registration.cpp
         ${CMAKE_SOURCE_DIR}/sources/utils/utils.cpp
 )
 
 add_executable(start_client ${${PROJECT_NAME}_SOURCES})
 
 target_include_directories(start_client PUBLIC  "${CMAKE_SOURCE_DIR}/include/utils/"
-                                                "${CMAKE_SOURCE_DIR}/include/client"
+                                                "${CMAKE_SOURCE_DIR}/include/client/"
                                                 "${CMAKE_SOURCE_DIR}/lib/JSON/include"
 )

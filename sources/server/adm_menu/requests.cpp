@@ -23,7 +23,7 @@ int ListRequest::Actions(std::vector<std::string> &list_requests) {
                 std::cin >> num_request;
             }
 
-            auto root_path_users = CreateRootDir("../../../database/users/");
+            auto root_path_users = CreateRootDir("database/users/");
             std::string new_path{root_path_users.string() + ExtractionName(list_requests[num_request - 1]) + ".json"};
             try {
                 std::filesystem::rename(list_requests[num_request - 1], new_path);
