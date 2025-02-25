@@ -1,7 +1,6 @@
-#include "request_handler.h"
+#include "s_request_handler.h"
 #include "serv_connection.h"
-
-#include <factory.h>
+#include "s_factory.h"
 
 ReqHandler::ReqHandler(const std::array<unsigned char, buf_size>& buffer)
 {
@@ -39,15 +38,16 @@ ReqHandler::ReqHandler(const std::array<unsigned char, buf_size>& buffer)
  *              ]
  *          }
  */
+
 void ReqHandler::DoHandle() {
 
     if (!j_input_buffer_.contains(kDataKey)) {
-        const auto action = ActionFactory::ActionFact(1);
+        const auto action = ActionFactory::ActionFact(id_cmd_registration);
         if (action->execute(j_input_buffer_)) {
             j_output_buffer[kResponseKey] = "Your registration request has been accepted";
         } else {
             j_output_buffer[kResponseKey] = "There is already such a user";
-            j_output_buffer[kIdKey] = 2;
+            j_output_buffer[kIdKey] = id_cmd_member_info;
         }
     } else {
         const auto action = ActionFactory::ActionFact(j_input_buffer_["data"].size());

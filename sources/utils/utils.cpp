@@ -45,50 +45,5 @@ std::filesystem::path CreateRootDir(const std::string& sub_path) {
 
 // TODO (Viktor): Добавить деструктор для unique (decltype) Прочитать про это в книжке "42 совета ..."
 
-// Поиск наименования жесткого диска в системе
-    std::string findDeviceHardDisk () {
-
-    std::ifstream pathHardDisk ("/proc/mounts");
-    if (!pathHardDisk.is_open()) std::cerr << "[ERROR] File not open" << std::endl;
-
-    MountEntry hardDisk;
-
-    while (!pathHardDisk.eof()) {
-        pathHardDisk >> hardDisk;
-        const std::unordered_set<std::string> kFsTypesSet{"ext2", "ext3", "ext4"};
-        for (auto it : kFsTypesSet) {
-            if (hardDisk.GetFsType() == it) {
-                return hardDisk.GetDevice();
-            }
-        }
-    }
-}
-
-    std::string SerialHardDdrive () {
-    char c_serial[20];
-
-    const std::string strPathHardDisk = "udevadm info --query=all --name=" + findDeviceHardDisk() + " | grep ID_SERIAL_SHORT";
-    std::unique_ptr<FILE, decltype(&pclose)> fp (popen(strPathHardDisk.data(), "r"), pclose);
-
-    if (fp == nullptr) std::cerr << "[ERROR] File not open" << std::endl;
-
-    while (fgets(c_serial, sizeof(c_serial), fp.get()) != nullptr) {} // Почему-то не работает, если я вместо с_serial пишу str.data() (заранее созданный)
-
-    // TODO (Viktor): нет проверки работы fgets()
-
-    std::string s_serial{std::string(c_serial)}; //22413C462705
-
-    return s_serial;
-}
-
-/*********************************************************************************************************************************************/
-
-    std::string Nickname() {
-    std::cout << "Enter your nickname: ";
-    std::string nicknmae{};
-    std::cin >> nicknmae;
-
-    return nicknmae;
-}
 
 /*********************************************************************************************************************************************/

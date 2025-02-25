@@ -1,5 +1,5 @@
 #include "serv_connection.h"
-#include "request_handler.h"
+#include "s_request_handler.h"
 #include "utils.h"
 
 
@@ -31,8 +31,8 @@ void Conection::Recv_msg() {
         const auto req_handler_ptr {std::make_unique<ReqHandler>(input_buffer_)};
         Send_msg(req_handler_ptr->GetResponse());
     } catch (const std::exception& err)  {
-
-        int flag = 1;
+        // При втором заходе некорректный json приходит
+        int flag{};
         // TODO: подумать об обработке Exception.
         //  Можно ли продолжать исполнение,
         //  если handler не сконструировался и данные не обработались
@@ -47,7 +47,8 @@ void Conection::Send_msg(const nlohmann::json &send_json) {
     if (const size_t transmitted = send(connection_socket_, output_buffer_.data(), output_buffer_.size(), 0); transmitted != output_buffer_.size()) {
     log << Time() << "[ERROR] not all data transmitted" << std::endl;
     }
-    //Recv_msg()
+
+    Recv_msg();
 }
 
 
