@@ -21,6 +21,7 @@ constexpr std::string_view kIdKey = "id_cmd";
 constexpr std::string_view kResponseKey = "response";
 
 // индификаторы команд
+constexpr int id_cmd_end_of_connection {0};
 constexpr int id_cmd_registration {1};
 constexpr int id_cmd_member_info {2};
 

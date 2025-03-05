@@ -18,9 +18,9 @@ public:
     bool execute(nlohmann::json& j) override;
 };
 
-class ActionFactory {
+class CreateAction {
 public:
-    static std::unique_ptr<Action> ActionFact(const int& id_cmd) {
+    static std::unique_ptr<Action> CreateAct(const int& id_cmd) {
         switch (id_cmd) {
             case 1:
                 return std::make_unique<Registration>();

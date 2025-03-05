@@ -45,13 +45,16 @@ ReqHandler::ReqHandler(const std::array<unsigned char, buf_size>& buffer)
  */
 
 void ReqHandler::DoHandle() {
-    const auto action = ActionFactory::ActionFact(j_input_buffer_["id_cmd"]);
+    const auto action = CreateAction::CreateAct(j_input_buffer_["id_cmd"]);
     json j_response = action->execute();
-    std::cout << j_response << std::endl;
-    json j_id_cmd;
-    j_id_cmd["id_cmd"] = j_input_buffer_["id_cmd"].dump();
-    std::cout << j_id_cmd << std::endl;
 
-    j_output_buffer["data"] = { {j_id_cmd}, {j_response} };
-    //j_output_buffer["data"] = {{"id_cmd" , "2"}, {"response", "16"}};
+    json j_resp = json::object({{"id_cmd", j_input_buffer_["id_cmd"]}, {"response", j_response["response"]}});
+
+    if (j_input_buffer_["id_cmd"] == 0) {
+        j_output_buffer = j_resp;
+    } else {
+        json j_array = json::array();
+        j_array.push_back(j_resp);
+        j_output_buffer = j_array;
+    }
 }

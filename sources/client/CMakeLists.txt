@@ -6,6 +6,7 @@ list(APPEND ${PROJECT_NAME}_SOURCES
         cli_connection.cpp
         c_request_handler.cpp
         actions/member_info.cpp
+        actions/cli_turn_off.cpp
         actions/registration.cpp
         ${CMAKE_SOURCE_DIR}/sources/utils/utils.cpp
 )

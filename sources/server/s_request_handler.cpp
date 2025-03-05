@@ -42,7 +42,7 @@ ReqHandler::ReqHandler(const std::array<unsigned char, buf_size>& buffer)
 void ReqHandler::DoHandle() {
 
     if (!j_input_buffer_.contains(kDataKey)) {
-        const auto action = ActionFactory::ActionFact(id_cmd_registration);
+        const auto action = CreateAction::CreateAct(id_cmd_registration);
         if (action->execute(j_input_buffer_)) {
             j_output_buffer[kResponseKey] = "Your registration request has been accepted";
         } else {
@@ -50,8 +50,10 @@ void ReqHandler::DoHandle() {
             j_output_buffer[kIdKey] = id_cmd_member_info;
         }
     } else {
-        const auto action = ActionFactory::ActionFact(j_input_buffer_["data"].size());
+        const auto action = CreateAction::CreateAct(j_input_buffer_["data"].size() + 1);
         action->execute(j_input_buffer_);
-        j_output_buffer[kIdKey] = j_input_buffer_["data"].size() + 1;
+        j_output_buffer[kIdKey] = id_cmd_end_of_connection;
+        j_output_buffer[kResponseKey] = "End of connection";
+
     }
 }
