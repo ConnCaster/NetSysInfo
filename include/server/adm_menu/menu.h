@@ -7,38 +7,36 @@
 
 class Menu {
 public:
-    virtual int execute() = 0;
+    virtual int Execute() = 0;
     virtual ~Menu() = default;
 };
 
 class ListRequest : public Menu{
 public:
-    int execute() override;
+    int Execute() override;
 private:
-    int action(std::vector<std::string>&);
+    int Actions(std::vector<std::string>&);
 };
 
 class ListUsers : public Menu{
 public:
-    int execute() override;
+    int Execute() override;
 private:
-    int action(std::vector<std::string>&);
+    int Actions(std::vector<std::string>&);
+    int UserChoice(std::vector<std::string> &list_user);
+    int ActionChoise();
 };
 
 class TurnOff : public Menu {
 public:
-    int execute() override;
+    int Execute() override;
 };
 
 class TurnOn : public Menu {
 public:
-    int execute() override;
+    int Execute() override;
 };
 
-class listInfoReq : public Menu {
-public:
-    int execute() override;
-};
 
 class MenuAction {
 public:
@@ -52,8 +50,6 @@ public:
                 return std::unique_ptr<Menu>(new ListRequest());
             case 3:
                 return std::unique_ptr<Menu>(new ListUsers());
-            case 4:
-                return std::unique_ptr<Menu>(new listInfoReq());
             default:
                 std::cout << "There is no such command, select an item from the suggested options" << std::endl;
 

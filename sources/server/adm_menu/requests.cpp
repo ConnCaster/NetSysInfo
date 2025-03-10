@@ -56,7 +56,7 @@ int ListRequest::Actions(std::vector<std::string> &list_requests) {
 }
 
 // Список запросов на регистрацию
-int ListRequest::Choice() {
+int ListRequest::Execute() {
     // Подготовка списка
     std::vector<std::string> requests_users;
     auto root_path_requests = CreateRootDir("database/requests/");
