@@ -4,25 +4,37 @@
 #include "menu.h"
 #include "utils.h"
 
+int ListRequest::RequestChoice(std::vector<std::string> &list_requests) {
+    std::cout << "\nSelect the request number: ";
+    int num_request;
+    std::cin >> num_request;
+    while (num_request > list_requests.size() || num_request < 1) {
+        std::cout << "\nThere is no request under this number\nSelect the request number: ";
+        std::cin >> num_request;
+    }
+    return num_request;
+}
 
-// Действия со списком Запросов на регистрацию
-int ListRequest::Actions(std::vector<std::string> &list_requests) {
+int ListRequest::ActionChoise() {
     std::cout << "\nPlease select an item:\n"
     << "0. Back\n" << "1. Register a request\n" << "2. Deleted a request\n" << ">> ";
     int decision;
     std::cin >> decision;
+    return decision;
+}
+
+
+
+// Действия со списком Запросов на регистрацию
+int ListRequest::Actions(std::vector<std::string> &list_requests) {
+
+    int num_request = RequestChoice(list_requests);
+    int decision = ActionChoise();
+
     switch (decision) {
         case 0:
             return 0;
         case 1: {
-            std::cout << "\nSelect the request number: ";
-            int num_request;
-            std::cin >> num_request;
-            while (num_request > list_requests.size() || num_request < 1) {
-                std::cout << "\nThere is no request under this number\nSelect the request number: ";
-                std::cin >> num_request;
-            }
-
             auto root_path_users = CreateRootDir("database/users/");
             std::string new_path{root_path_users.string() + ExtractionName(list_requests[num_request - 1]) + ".json"};
             try {
@@ -37,14 +49,6 @@ int ListRequest::Actions(std::vector<std::string> &list_requests) {
             return 1; // Регистрация
         }
         case 2: {
-            std::cout << "\nSelect the request number: ";
-            int num_request;
-            std::cin >> num_request;
-            while (num_request > list_requests.size()) {
-                std::cout << "\nThere is no request under this number\nSelect the request number: ";
-                std::cin >> num_request;
-            }
-
             std::string command {"rm " + list_requests[num_request - 1]};
             system(command.data());
 

@@ -16,6 +16,8 @@ public:
     int Execute() override;
 private:
     int Actions(std::vector<std::string>&);
+    int RequestChoice(std::vector<std::string> &list_requests);
+    int ActionChoise();
 };
 
 class ListUsers : public Menu{
