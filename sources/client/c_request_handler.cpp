@@ -13,44 +13,15 @@ ReqHandler::ReqHandler(const std::array<unsigned char, buf_size>& buffer)
     DoHandle();
 }
 
-/*
- *
- * j_input_buffer_ json:
- * I. Клиент дожидается регистрации:
- *          {
- *              "auth": {
- *                  "username": "<username>",
- *                  "serial_hard_disk": "<serial_hard_disk>"
- *              }
- *          }
- *
- * II. Клиент авторизован и присылает результаты исполнения команд:
- *          {
- *              "auth": {
- *                  "username": "<username>",
- *                  "serial_hard_disk": "<serial_hard_disk>"
- *              },
- *              "data": [
- *                  {
- *                  "id_cmd": 1,
- *                  "response": "<response>"
- *                  },
- *                  ... ,
- *                  {
- *                  "id_cmd": INT_MAX,
- *                  "response": "<response>"
- *                  }
- *              ]
- *          }
- */
-
 void ReqHandler::DoHandle() {
-    const auto action = CreateAction::CreateAct(j_input_buffer_["id_cmd"]);
+    std::string tmp = j_input_buffer_["id_cmd"];
+    int tmp_ = std::stoi(tmp);
+    const auto action = CreateAction::CreateAct(tmp_);
     json j_response = action->execute();
 
     json j_resp = json::object({{"id_cmd", j_input_buffer_["id_cmd"]}, {"response", j_response["response"]}});
 
-    if (j_input_buffer_["id_cmd"] == 0) {
+    if (j_input_buffer_["id_cmd"] == "0") {
         j_output_buffer = j_resp;
     } else {
         json j_array = json::array();

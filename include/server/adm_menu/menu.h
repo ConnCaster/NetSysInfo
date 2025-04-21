@@ -15,18 +15,26 @@ class ListRequest : public Menu{
 public:
     int Execute() override;
 private:
-    int Actions(std::vector<std::string>&);
-    int RequestChoice(std::vector<std::string> &list_requests);
+    int Actions();
+    int RequestChoice();
     int ActionChoise();
+private:
+    std::vector<std::string> list_requests_;
 };
 
 class ListUsers : public Menu{
 public:
     int Execute() override;
 private:
-    int Actions(std::vector<std::string>&);
-    int UserChoice(std::vector<std::string> &list_user);
+    int Actions();
+    int UserChoice();
     int ActionChoise();
+    int RequestChoice();
+    std::string ReturnNameCmd (int id_cmd);
+private:
+    std::vector<std::string> list_users_;
+    int id_cmd_min_ {1};
+    int id_cmd_max_ {2};
 };
 
 class TurnOff : public Menu {

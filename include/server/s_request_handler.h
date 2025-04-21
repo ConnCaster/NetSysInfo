@@ -30,13 +30,15 @@ public:
     explicit ReqHandler(const std::array<unsigned char, kBufSize>& buffer);
 
     json GetResponse() {
-        return j_output_buffer;
+        return j_output_buffer_;
     }
 private:
     void DoHandle();
+    std::string PathUserDB();
 private:
     json j_input_buffer_;
-    json j_output_buffer ;
+    json j_output_buffer_;
+    std::string cmd_check_DB_ {"SELECT EXISTS(SELECT * FROM command_queue);"};
 };
 
 #endif //CLIENT_SERVER_REQUEST_HANDLER_H
