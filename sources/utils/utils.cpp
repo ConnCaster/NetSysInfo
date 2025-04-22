@@ -15,12 +15,20 @@ std::string Time(const std::time_t now) {
 /*********************************************************************************************************************************************/
 
 // Для корректировки имени
-std::string ExtractionName (const std::string& path) {
+std::string ExtractionNameJson (const std::string& path) {
     int sizeName = path.size() - (path.find_last_of("/") + (path.size() - path.find(".json") + 1));
 
     return path.substr(path.find_last_of("/") + 1,sizeName);
 }
 
+/*********************************************************************************************************************************************/
+std::string ExtractionNameDB(const std::string& path) {
+    int sizeName = path.size() - (path.find_last_of("/") + (path.size() - path.find(".json") + 1));
+
+    std::string created_db =  path.substr(path.find_last_of("/") + 1,sizeName) + ".db";
+
+    return created_db;
+}
 /*********************************************************************************************************************************************/
 
 // TODO: sub_path = "database/request/" -> "/home/user/dir/database/request/"

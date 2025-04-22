@@ -7,39 +7,51 @@
 
 class Menu {
 public:
-    virtual int Choice() = 0;
+    virtual int Execute() = 0;
     virtual ~Menu() = default;
 };
 
 class ListRequest : public Menu{
 public:
-    int Choice() override;
+    int Execute() override;
 private:
-    int Actions(std::vector<std::string>&);
+    int Actions();
+    int RequestChoice();
+    int ActionChoise();
+private:
+    std::vector<std::string> list_requests_;
 };
 
 class ListUsers : public Menu{
 public:
-    int Choice() override;
+    int Execute() override;
 private:
-    int Actions(std::vector<std::string>&);
+    int Actions();
+    int UserChoice();
+    int ActionChoise();
+    int RequestChoice();
+    std::string ReturnNameCmd (int id_cmd);
+private:
+    std::vector<std::string> list_users_;
+    int id_cmd_min_ {1};
+    int id_cmd_max_ {2};
 };
 
 class TurnOff : public Menu {
 public:
-    int Choice() override;
+    int Execute() override;
 };
-
 
 class TurnOn : public Menu {
 public:
-    int Choice() override;
+    int Execute() override;
 };
 
-class MenuFactory {
+
+class MenuAction {
 public:
-    static auto ChoiceFact(int point) {
-        switch (point) {
+    static auto CreateAct(int cmd) {
+        switch (cmd) {
             case 0:
                 return std::unique_ptr<Menu>(new TurnOff());
             case 1:

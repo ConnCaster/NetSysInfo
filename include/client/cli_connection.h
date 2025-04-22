@@ -18,7 +18,7 @@ public:
     explicit Conection(const int sock_fd);
 
     void SetOutputBuffer(const std::string &answer) {
-        std::copy(answer.begin(), answer.end(), output_buffer_.data() + index_null_ter_());
+        std::copy(answer.begin(), answer.end(), output_buffer_.data());
     }
 
     ~Conection() {
@@ -27,7 +27,6 @@ public:
     }
 
 private:
-    int index_null_ter_();
     void DoStart();
     void RecvMsg();
     void SendMsg(const json &send_json);

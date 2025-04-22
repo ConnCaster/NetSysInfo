@@ -21,6 +21,7 @@ constexpr std::string_view kIdKey = "id_cmd";
 constexpr std::string_view kResponseKey = "response";
 
 // индификаторы команд
+constexpr int id_cmd_end_of_connection {0};
 constexpr int id_cmd_registration {1};
 constexpr int id_cmd_member_info {2};
 
@@ -29,13 +30,15 @@ public:
     explicit ReqHandler(const std::array<unsigned char, kBufSize>& buffer);
 
     json GetResponse() {
-        return j_output_buffer;
+        return j_output_buffer_;
     }
 private:
     void DoHandle();
+    std::string PathUserDB();
 private:
     json j_input_buffer_;
-    json j_output_buffer ;
+    json j_output_buffer_;
+    std::string cmd_check_DB_ {"SELECT EXISTS(SELECT * FROM command_queue);"};
 };
 
 #endif //CLIENT_SERVER_REQUEST_HANDLER_H

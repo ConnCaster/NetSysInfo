@@ -9,7 +9,8 @@ std::string Time(const std::time_t now = std::time(nullptr));
 /*********************************************************************************************************************************************/
 
 // Для корректировки имени
-std::string ExtractionName (const std::string& path);
+std::string ExtractionNameJson (const std::string& path);
+std::string ExtractionNameDB (const std::string& path);
 
 /*********************************************************************************************************************************************/
 

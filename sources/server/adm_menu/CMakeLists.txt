@@ -7,6 +7,7 @@ list(APPEND ${PROJECT_NAME}_SOURCES
         turn_on.cpp
         turn_off.cpp
         requests.cpp
+        ${CMAKE_SOURCE_DIR}/lib/SQlite/sqlite3.c
         ${CMAKE_SOURCE_DIR}/sources/utils/utils.cpp
         ${CMAKE_SOURCE_DIR}/sources/server/server.cpp
         ${CMAKE_SOURCE_DIR}/sources/server/serv_connection.cpp
@@ -27,5 +28,5 @@ target_include_directories(start_admin PUBLIC   "${CMAKE_SOURCE_DIR}/include/uti
                                                 "${CMAKE_SOURCE_DIR}/include/fileHandler"
                                                 "${CMAKE_SOURCE_DIR}/include/userManager"
                                                 "${CMAKE_SOURCE_DIR}/include/server/adm_menu"
-
+                                                "${CMAKE_SOURCE_DIR}/lib/SQlite"
 )

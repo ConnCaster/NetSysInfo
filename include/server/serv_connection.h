@@ -23,6 +23,7 @@ public:
     }
 
     ~Conection() {
+        log.close();
         shutdown(connection_socket_,2);
         close(connection_socket_);
     }

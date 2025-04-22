@@ -3,7 +3,7 @@
 
 
 // Включение сервера
-int TurnOn::Choice() {
+int TurnOn::Execute() {
     try {
         Server server(5000);
         server.Run();

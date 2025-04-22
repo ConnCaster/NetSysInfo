@@ -19,10 +19,17 @@ public:
     json execute() override;
 };
 
-class ActionFactory {
+class ClientTurnOff  : public Action {
 public:
-    static std::unique_ptr<Action> ActionFact(const int& id_cmd) {
+    json execute() override;
+};
+
+class CreateAction {
+public:
+    static std::unique_ptr<Action> CreateAct(int id_cmd) {
         switch (id_cmd) {
+            case 0:
+                return std::make_unique<ClientTurnOff>();
             case 1:
                 return std::make_unique<Authentication>();
             case 2:
