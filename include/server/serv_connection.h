@@ -4,12 +4,14 @@
 #include <nlohmann/json.hpp>
 #include <sys/socket.h>
 
+#include "loger.h"
+
 
 constexpr unsigned int buf_size = 512;
 
 class Conection {
 private:
-    std::fstream log;
+    Log server_log_;
     int connection_socket_{0};
     int socket_fd_{0};
     std::array<unsigned char, buf_size> input_buffer_;
@@ -23,7 +25,6 @@ public:
     }
 
     ~Conection() {
-        log.close();
         shutdown(connection_socket_,2);
         close(connection_socket_);
     }

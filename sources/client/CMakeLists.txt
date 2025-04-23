@@ -8,12 +8,14 @@ list(APPEND ${PROJECT_NAME}_SOURCES
         actions/member_info.cpp
         actions/cli_turn_off.cpp
         actions/registration.cpp
+        ${CMAKE_SOURCE_DIR}/sources/log/loger.cpp
         ${CMAKE_SOURCE_DIR}/sources/utils/utils.cpp
 )
 
 add_executable(start_client ${${PROJECT_NAME}_SOURCES})
 
-target_include_directories(start_client PUBLIC  "${CMAKE_SOURCE_DIR}/include/utils/"
+target_include_directories(start_client PUBLIC  "${CMAKE_SOURCE_DIR}/include/log"
+                                                "${CMAKE_SOURCE_DIR}/include/utils/"
                                                 "${CMAKE_SOURCE_DIR}/include/client/"
                                                 "${CMAKE_SOURCE_DIR}/lib/JSON/include"
 )

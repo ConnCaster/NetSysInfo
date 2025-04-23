@@ -62,10 +62,8 @@ void ReqHandler::DoHandle() {
         const auto action = CreateAction::CreateAct(j_input_buffer_["data"].size() + 1); // TODO: ???
         action->execute(j_input_buffer_);
 
-
         j_output_buffer_[kResponseKey] = "";
         sq_check_response_cmd.read(j_output_buffer_);
-
     }
 }
 

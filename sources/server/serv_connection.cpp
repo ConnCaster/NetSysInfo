@@ -3,15 +3,8 @@
 #include "utils.h"
 
 
-
 Conection::Conection(const int client_socket)
-    : connection_socket_(client_socket), input_buffer_{}, output_buffer_{} {
-
-    // Для записи дествий сервера
-    auto root_path_log = CreateRootDir("log/");
-    log.open(root_path_log.string() + "server.txt", std::ios::in | std::ios::out | std::ios::app);
-
-
+    : server_log_("server"), connection_socket_(client_socket), input_buffer_{}, output_buffer_{} {
     DoStart();
 
 }
@@ -23,7 +16,7 @@ void Conection::DoStart() {
 void Conection::Recv_msg() {
     // Получение сообщения от пользователя
     if (const ssize_t received = recv(connection_socket_, input_buffer_.data(), 512, 0); received <= 0) {
-        log << Time() << "[ERROR] Error recv()" << std::endl;
+        server_log_.Get_log() << Time() << "[ERROR] Error recv()" << std::endl;
         return;
     }
 
@@ -45,7 +38,7 @@ void Conection::Send_msg(const nlohmann::json &send_json) {
     SetOutputBuffer(send_json.dump());
 
     if (const size_t transmitted = send(connection_socket_, output_buffer_.data(), output_buffer_.size(), 0); transmitted != output_buffer_.size()) {
-    log << Time() << "[ERROR] not all data transmitted" << std::endl;
+    server_log_.Get_log() << Time() << "[ERROR] not all data transmitted" << std::endl;
     }
 
     Recv_msg();

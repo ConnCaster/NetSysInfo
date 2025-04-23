@@ -1,15 +1,10 @@
 #include "c_request_handler.h"
-
-#include <iostream>
-#include <variant>
-
 #include "cli_connection.h"
 #include "c_factory.h"
 
 ReqHandler::ReqHandler(const std::array<unsigned char, buf_size>& buffer)
 {
     j_input_buffer_ = nlohmann::json::parse(buffer.data());
-
     DoHandle();
 }
 

@@ -15,7 +15,6 @@ public:
 class FileDB  : public IDataBase {
 private:
     std::fstream db_file_;
-    std::fstream log_;
 public:
     explicit FileDB(const std::string &path);
 
@@ -28,14 +27,12 @@ public:
     }
 
     ~FileDB() override {
-        log_.close();
         db_file_.close();
     };
 };
 
 class SQliteDB  : public IDataBase {
 private:
-    std::fstream log_;
     std::string created_table_ {"CREATE TABLE IF NOT EXISTS command_queue('Name of the command' TEXT, 'ID command' INT)"};
     char* errMsg_;
     sqlite3 *db_file_;
@@ -52,7 +49,6 @@ public:
     }
 
     ~SQliteDB() override {
-        log_.close();
         sqlite3_close(db_file_);
     };
 };

@@ -3,47 +3,43 @@
 
 #include "file_handler.h"
 #include "sqlite3.h"
+#include "loger.h"
 
-void f_log(std::fstream &log) {
-    auto root_path_log = CreateRootDir("log/"); // Что-то с путем ????
-    log.open(root_path_log.string() + "database.txt", std::ios::in | std::ios::out | std::ios::app);
-    if (!log.is_open()) {
-        std::cerr << Time() <<  "[Log] Can't open log file for database"<< std::endl;
-    }
-}
+//TODO: Сделать класс ЛОГ и переделать на правильную инициализацию полей в конструкторе SQLite
 
 FileDB::FileDB(const std::string &path)
     : db_file_{path, std::ios::out | std::ios::in | std::ios::app} {
-    f_log(log_);
+    Log db_log ("database");
 
     if (!db_file_.is_open()) {
-        log_ << Time() <<  "[File DataBase] Can't open database" << std::endl;
+        db_log.Get_log() << Time() <<  "[File DataBase] Can't open database" << std::endl;
     } else {
-        log_ << Time() <<  "[File DataBase] Opened database successfully" << std::endl;
+        db_log.Get_log() << Time() <<  "[File DataBase] Opened database successfully" << std::endl;
     }
 }
 
 SQliteDB::SQliteDB(const std::string &path) {
-    f_log(log_);
+    Log db_log ("database");
 
     is_open_ = sqlite3_open(path.data(), &db_file_);
 
     if( is_open_ ) {
-        log_ << Time() <<  "[SQlite] Can't open database: " << sqlite3_errmsg(db_file_) << std::endl;
+        db_log.Get_log() << Time() <<  "[SQlite] Can't open database: " << sqlite3_errmsg(db_file_) << std::endl;
     } else {
-        log_ << Time() <<  "[SQlite] Opened database successfully" << std::endl;
+        db_log.Get_log() << Time() <<  "[SQlite] Opened database successfully" << std::endl;
     }
 
     int rc = sqlite3_exec(db_file_, created_table_.c_str(), NULL, NULL, &errMsg_);
     if( rc != SQLITE_OK ){
-        log_ << Time() << "[SQlite] " << errMsg_ << std::endl;
+        db_log.Get_log() << Time() << "[SQlite] " << errMsg_ << std::endl;
         sqlite3_free(errMsg_);
     } else {
-        log_ << Time() << "[SQlite] Table created successfully" << std::endl;;
+        db_log.Get_log() << Time() << "[SQlite] Table created successfully" << std::endl;;
     }
 }
 
 void SQliteDB::write(const nlohmann::json &content) {
+    Log db_log ("database");
 
     /*
     std::string name_cmd = content["name_cmd"];
@@ -58,11 +54,11 @@ void SQliteDB::write(const nlohmann::json &content) {
 
     int rc = sqlite3_exec(db_file_, insert_str.c_str(), NULL, 0, &errMsg_);
     if (rc != SQLITE_OK) {
-        log_ << Time() << "[SQlite] Error Insert:" << errMsg_ << std::endl;
+        db_log.Get_log() << Time() << "[SQlite] Error Insert:" << errMsg_ << std::endl;
         sqlite3_free(errMsg_);
     }
     else {
-        log_ << Time() << "[SQlite] Records created Successfully!" << std::endl;
+        db_log.Get_log() << Time() << "[SQlite] Records created Successfully!" << std::endl;
     }
 }
 
@@ -78,16 +74,18 @@ static int readCallback(void *outInt, int argc, char **argv, char **azColName) {
 }
 
 void SQliteDB::read(nlohmann::json &content) {
+    Log db_log ("database");
+
     std::string select_str = "SELECT * FROM command_queue";
     int outInt;
 
     int rc = sqlite3_exec(db_file_, select_str.c_str(), readCallback, &outInt, &errMsg_);
     if (rc != SQLITE_OK) {
-        log_ << Time() << "[SQlite] Error Insert:" << errMsg_ << std::endl;
+        db_log.Get_log() << Time() << "[SQlite] Error Insert:" << errMsg_ << std::endl;
         sqlite3_free(errMsg_);
     }
     else {
-        log_ << Time() << "[SQlite] Records created Successfully!" << std::endl;
+        db_log.Get_log() << Time() << "[SQlite] Records created Successfully!" << std::endl;
     }
 
     content["id_cmd"] = outInt;

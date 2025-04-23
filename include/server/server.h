@@ -1,13 +1,13 @@
 #pragma once
 #include <netinet/in.h>    // Для использования sockaddr_in
-#include <fstream>
 #include <unistd.h>
 
+#include "loger.h"
 
 
 class Server {
 private:
-    std::fstream log;
+    Log server_log_;
     uint16_t port_;
     struct sockaddr_in addr_{};
     int sock_fd_;
@@ -21,9 +21,7 @@ public:
         return client_socket_;
     }
 
-
     ~Server() {
-        log.close();
         close(sock_fd_);
     }
 };

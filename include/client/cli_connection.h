@@ -1,8 +1,11 @@
 #pragma once
 
+
 #include <unistd.h>
 #include <nlohmann/json.hpp>
 #include <sys/socket.h>
+
+#include "loger.h"
 
 using json = nlohmann::json;
 
@@ -11,6 +14,7 @@ constexpr std::string_view kIdKey = "id_cmd";
 
 class Conection {
 private:
+    Log client_log_;
     int socket_fd_{0};
     std::array<unsigned char, buf_size> input_buffer_;
     std::array<unsigned char, buf_size> output_buffer_;
