@@ -23,7 +23,7 @@ std::string ExtractionNameJson (const std::string& path) {
 std::string ExtractionNameDB(const std::string& path) {
     int sizeName = path.size() - (path.find_last_of("/") + (path.size() - path.find(".json") + 1));
 
-    std::string created_db =  path.substr(path.find_last_of("/") + 1,sizeName) + ".db";
+    std::string created_db =  path.substr(path.find_last_of("/") + 1,sizeName) + ".db3";
 
     return created_db;
 }

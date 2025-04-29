@@ -1,7 +1,6 @@
 #include <string>
 #include <filesystem>
 #include <file_handler.h>
-
 #include "menu.h"
 #include "utils.h"
 
@@ -71,13 +70,14 @@ int ListUsers::Actions() {
         case 2: {
             auto root_path_users_cmd_line = CreateRootDir("database/users_cmd_line/");
             root_path_users_cmd_line += ExtractionNameDB(list_users_[num_user - 1]);
-            SQliteDB sq_user_record_cmd(root_path_users_cmd_line);
+            SQliteDB sql_user_record_cmd(root_path_users_cmd_line);
 
             int id_cmd = RequestChoice();
 
             nlohmann::json j_request_cmd = nlohmann::json::object({{"name_cmd", ReturnNameCmd(id_cmd)}, {"id_cmd", id_cmd}});
 
-            sq_user_record_cmd.write(j_request_cmd);
+            sql_user_record_cmd.write(j_request_cmd);
+
             return 2;
         }
     }

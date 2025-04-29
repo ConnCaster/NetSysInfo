@@ -4,7 +4,8 @@
 #include <array>
 #include <nlohmann/json.hpp>
 
-constexpr unsigned int kBufSize = 512;
+constexpr unsigned int kBufSize {512};
+constexpr int kEmptyTable {0};
 
 using json = nlohmann::json;
 
