@@ -1,5 +1,7 @@
 #include "server.h"
 
+Log server_log ("server");
+
 int main() {
     try {
         Server server(5000);

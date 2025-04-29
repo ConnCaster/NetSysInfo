@@ -4,11 +4,13 @@
 #include <arpa/inet.h>
 
 #include "cli_connection.h"
+#include "loger.h"
 #include "utils.h"
 
 
+
 Client::Client(const uint16_t port)
-    : port_(port) {
+    : client_log_("client"), port_(port) {
     // Файловый дескриптор сокета
     sock_fd_ = socket(AF_INET, SOCK_STREAM, 0);
     // AF_INET указывает семейство протоколов IPv4
@@ -16,7 +18,7 @@ Client::Client(const uint16_t port)
     // 0 - протокол по умолчанию
 
     if (sock_fd_ == -1) {
-        std::cerr << Time() << "[ERROR] Socket()" << std::endl;
+        client_log_.Get_log() << Time() << "[ERROR] Socket()" << std::endl;
     }
     // Определяем адрес сервера
     addr_.sin_family = AF_INET; // AF_INET указывает семейство протоколов IPv4
@@ -29,12 +31,13 @@ Client::Client(const uint16_t port)
 
 void Client::Run()  {
     // Соеденение с сервером
+
     while (true) {
         int ret = connect(sock_fd_, reinterpret_cast<const struct sockaddr*>(&addr_),sizeof(addr_));
         if (ret == -1) {
-            std::cerr << Time() << "[ERROR] Connection ERROR to " << inet_ntoa(addr_.sin_addr) << std::endl;
+            client_log_.Get_log() << Time() << "[ERROR] Connection ERROR to " << inet_ntoa(addr_.sin_addr) << std::endl;
         } else {
-            std::cout << Time() << "[CLIENT] Connection to " << inet_ntoa(addr_.sin_addr) << ":" << ntohs(addr_.sin_port)
+            client_log_.Get_log() << Time() << "[CLIENT] Connection to " << inet_ntoa(addr_.sin_addr) << ":" << ntohs(addr_.sin_port)
             << " established!" << std::endl;
 
             std::unique_ptr<Conection> connect_ptr = std::make_unique<Conection>(sock_fd_);
@@ -43,7 +46,7 @@ void Client::Run()  {
 
         sock_fd_ = (socket(AF_INET, SOCK_STREAM, 0));
         if (sock_fd_ == -1) {
-            std::cerr << Time() << "[ERROR] Socket()" << std::endl;
+            client_log_.Get_log() << Time() << "[ERROR] Socket()" << std::endl;
         }
     }
 }

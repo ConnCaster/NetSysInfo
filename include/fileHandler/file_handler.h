@@ -1,9 +1,12 @@
 #pragma once
 #include <fstream>
-#include <sqlite3.h>
 #include <nlohmann/json.hpp>
 
+#include "../log/loger.h"
+#include "SQLiteCpp/Database.h"
+
 using json = nlohmann::json;
+constexpr int kFirstRowInTheTable {0};
 
 class IDataBase  {
 public:
@@ -14,8 +17,8 @@ public:
 
 class FileDB  : public IDataBase {
 private:
+    Log db_log_;
     std::fstream db_file_;
-    std::fstream log_;
 public:
     explicit FileDB(const std::string &path);
 
@@ -28,18 +31,17 @@ public:
     }
 
     ~FileDB() override {
-        log_.close();
         db_file_.close();
     };
 };
 
 class SQliteDB  : public IDataBase {
 private:
-    std::fstream log_;
-    std::string created_table_ {"CREATE TABLE IF NOT EXISTS command_queue('Name of the command' TEXT, 'ID command' INT)"};
-    char* errMsg_;
-    sqlite3 *db_file_;
-    int is_open_;
+    SQLite::Database db_file_;
+    Log db_log_;
+    std::string created_table_ {"CREATE TABLE IF NOT EXISTS command_queue('Name of the command' TEXT, 'ID command' TEXT)"};
+    std::string *err_msg_;
+
 public:
     explicit SQliteDB(const std::string &path);
 
@@ -47,12 +49,10 @@ public:
 
     inline void read(nlohmann::json& content) override;
 
-    sqlite3* GetDB() {
-        return db_file_;
-    }
+    int check_occupancy_table();
+
 
     ~SQliteDB() override {
-        log_.close();
-        sqlite3_close(db_file_);
+        remove("db_file_");
     };
 };
