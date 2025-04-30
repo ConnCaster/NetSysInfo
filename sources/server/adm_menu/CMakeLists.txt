@@ -7,11 +7,12 @@ list(APPEND ${PROJECT_NAME}_SOURCES
         turn_on.cpp
         turn_off.cpp
         requests.cpp
-        ${CMAKE_SOURCE_DIR}/sources/log/loger.cpp
+        ${CMAKE_SOURCE_DIR}/sources/log/logger.cpp
         ${CMAKE_SOURCE_DIR}/sources/utils/utils.cpp
         ${CMAKE_SOURCE_DIR}/sources/server/server.cpp
+        ${CMAKE_SOURCE_DIR}/sources/storage/sql_database.cpp
+        ${CMAKE_SOURCE_DIR}/sources/storage/file_database.cpp
         ${CMAKE_SOURCE_DIR}/sources/server/serv_connection.cpp
-        ${CMAKE_SOURCE_DIR}/sources/fileHandler/file_handler.cpp
         ${CMAKE_SOURCE_DIR}/sources/server/s_request_handler.cpp
         ${CMAKE_SOURCE_DIR}/sources/server/actions/member_info.cpp
         ${CMAKE_SOURCE_DIR}/sources/server/actions/registration.cpp
@@ -19,8 +20,6 @@ list(APPEND ${PROJECT_NAME}_SOURCES
 
 # Реализация новых executors
 list(APPEND ${PROJECT_NAME}_SOURCES)
-
-add_subdirectory("${CMAKE_SOURCE_DIR}/lib/SQLiteCpp" SQLiteCpp)
 
 add_executable(start_admin ${${PROJECT_NAME}_SOURCES})
 
@@ -34,8 +33,10 @@ target_link_libraries(start_admin
 target_include_directories(start_admin PUBLIC   "${CMAKE_SOURCE_DIR}/include/log"
                                                 "${CMAKE_SOURCE_DIR}/include/utils"
                                                 "${CMAKE_SOURCE_DIR}/include/server"
+                                                "${CMAKE_SOURCE_DIR}/include/storage"
                                                 "${CMAKE_SOURCE_DIR}/lib/JSON/include"
-                                                "${CMAKE_SOURCE_DIR}/include/fileHandler"
                                                 "${CMAKE_SOURCE_DIR}/include/userManager"
                                                 "${CMAKE_SOURCE_DIR}/include/server/adm_menu"
+                                                "${CMAKE_SOURCE_DIR}/include/storage/interfaces"
+
 )

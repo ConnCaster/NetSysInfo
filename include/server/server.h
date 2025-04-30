@@ -2,7 +2,7 @@
 #include <netinet/in.h>    // Для использования sockaddr_in
 #include <unistd.h>
 
-#include "loger.h"
+#include "logger.h"
 
 
 class Server {

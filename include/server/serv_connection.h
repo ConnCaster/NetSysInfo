@@ -4,7 +4,7 @@
 #include <nlohmann/json.hpp>
 #include <sys/socket.h>
 
-#include "loger.h"
+#include "logger.h"
 
 
 constexpr unsigned int buf_size = 512;

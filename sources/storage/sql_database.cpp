@@ -1,17 +1,5 @@
-#include <utils.h>
+#include "sql_database.h"
 
-#include "file_handler.h"
-
-
-FileDB::FileDB(const std::string &path)
-    : db_log_("database"), db_file_{path, std::ios::out | std::ios::in | std::ios::app} {
-
-    if (!db_file_.is_open()) {
-        db_log_.Get_log() << Time() <<  "[File DataBase] Can't open database" << std::endl;
-    } else {
-        db_log_.Get_log() << Time() <<  "[File DataBase] Opened database successfully" << std::endl;
-    }
-}
 
 SQliteDB::SQliteDB(const std::string &path)
     : db_file_(path.data(),  SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE), db_log_("database") {
@@ -39,7 +27,7 @@ void SQliteDB::read(nlohmann::json &content) {
 
         SQLite::Statement query(db_file_, "SELECT \"ID command\" FROM command_queue");
         query.executeStep();
-        content["id_cmd"] = query.getColumn(first_row_in_the_table);
+        content["id_cmd"] = query.getColumn(kFirstRowInTheTable);
 
     }  catch (std::exception &err_msg_) {
         db_log_.Get_log() << Time << " [Reading] " << "SQLite exception: " << err_msg_.what() << std::endl;
