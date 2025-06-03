@@ -1,6 +1,8 @@
+#include <create_table.h>
 #include <string>
 #include <filesystem>
-#include <file_handler.h>
+
+#include "sql_database.h"
 #include "menu.h"
 #include "utils.h"
 
@@ -74,7 +76,7 @@ int ListUsers::Actions() {
 
             int id_cmd = RequestChoice();
 
-            nlohmann::json j_request_cmd = nlohmann::json::object({{"name_cmd", ReturnNameCmd(id_cmd)}, {"id_cmd", id_cmd}});
+            json j_request_cmd = json::object({{"name_cmd", ReturnNameCmd(id_cmd)}, {"id_cmd", id_cmd}});
 
             sql_user_record_cmd.write(j_request_cmd);
 

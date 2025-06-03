@@ -1,9 +1,6 @@
 #include "s_request_handler.h"
-
-#include <file_handler.h>
-#include <iostream>
-#include <utils.h>
-
+#include "utils.h"
+#include "sql_database.h"
 #include "serv_connection.h"
 #include "s_factory.h"
 
@@ -15,7 +12,7 @@ std::string ReqHandler::PathUserDB() {
 
 ReqHandler::ReqHandler(const std::array<unsigned char, buf_size>& buffer)
 {
-    j_input_buffer_ = nlohmann::json::parse(buffer.data());
+    j_input_buffer_ = json::parse(buffer.data());
     DoHandle();
 
 }

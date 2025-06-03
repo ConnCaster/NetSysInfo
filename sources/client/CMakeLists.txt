@@ -8,7 +8,7 @@ list(APPEND ${PROJECT_NAME}_SOURCES
         actions/member_info.cpp
         actions/cli_turn_off.cpp
         actions/registration.cpp
-        ${CMAKE_SOURCE_DIR}/sources/log/loger.cpp
+        ${CMAKE_SOURCE_DIR}/sources/log/logger.cpp
         ${CMAKE_SOURCE_DIR}/sources/utils/utils.cpp
 )
 
