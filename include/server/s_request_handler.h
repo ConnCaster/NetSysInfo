@@ -5,7 +5,7 @@
 #include <nlohmann/json.hpp>
 
 constexpr unsigned int kBufSize {512};
-constexpr int kEmptyTable {0};
+constexpr std::string kEmptyTable {"0"};
 
 using json = nlohmann::json;
 

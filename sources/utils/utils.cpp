@@ -14,16 +14,18 @@ std::string Time(const std::time_t now) {
 /*********************************************************************************************************************************************/
 
 // Для корректировки имени
+/*
 std::string ExtractionNameJson (const std::string& path) {
     int sizeName = path.size() - (path.find_last_of("/") + (path.size() - path.find(".json") + 1));
 
     return path.substr(path.find_last_of("/") + 1,sizeName);
 }
+*/
 
 std::string ExtractionNameDB(const std::string& path) {
-    int sizeName = path.size() - (path.find_last_of("/") + (path.size() - path.find(".json") + 1));
+    int sizeName = path.size() - (path.find_last_of("/") + (path.size() - path.find(".db3") + 1));
 
-    std::string created_db =  path.substr(path.find_last_of("/") + 1,sizeName) + ".db3";
+    std::string created_db =  path.substr(path.find_last_of("/") + 1,sizeName);
 
     return created_db;
 }
@@ -32,7 +34,7 @@ std::string ExtractionNameDB(const std::string& path) {
 // TODO: sub_path = "database/request/" -> "/home/user/dir/database/request/"
 
 std::filesystem::path CreateRootDir(const std::string& sub_path) {
-    auto curr_path = std::filesystem::path("/home/user/Projects/C++/Client-Server/cmake-build-debug");
+    auto curr_path = std::filesystem::path("/home/user/Programs/C++/NetSysInfo/cmake-build-debug");
 
     curr_path /= sub_path;
     if (!exists(curr_path)) {

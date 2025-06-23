@@ -5,7 +5,8 @@
 #include <nlohmann/json.hpp>
 #include <sys/socket.h>
 
-#include "loger.h"
+#include "logger.h"
+
 
 using json = nlohmann::json;
 

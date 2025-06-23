@@ -1,8 +1,11 @@
 #pragma once
 
 #include <iostream>
+#include <map>
 #include <vector>
 #include <memory>
+
+constexpr std::string kCmdTable {"commands_table"};
 
 
 class Menu {
@@ -26,6 +29,8 @@ class ListUsers : public Menu{
 public:
     int Execute() override;
 private:
+    void Preparing_the_list();
+    void Output_the_list();
     int Actions();
     int UserChoice();
     int ActionChoise();
@@ -33,6 +38,8 @@ private:
     std::string ReturnNameCmd (int id_cmd);
 private:
     std::vector<std::string> list_users_;
+    std::vector<std::string> list_names_columns_ {"ID command", "Name command"};
+    std::map<std::string, std::string> list_types_columns {{"ID command", "INTEGER"}, {"Name command", "TEXT"}};
     int id_cmd_min_ {1};
     int id_cmd_max_ {2};
 };

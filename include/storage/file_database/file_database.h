@@ -3,27 +3,25 @@
 
 #include <fstream>
 
-#include "itf_database.h"
 #include "logger.h"
+#include "nlohmann/json.hpp"
 
-
-
-class FileDB  : public IDataBase {
+class FileDB {
 private:
     Log db_log_;
     std::fstream db_file_;
 public:
     explicit FileDB(const std::string &path);
 
-    inline void write(const json& content) override {
+    inline void write(const nlohmann::json& content) {
         db_file_ << content;
     }
 
-    inline void read(json& content) override {
+    inline void read(nlohmann::json& content) {
         db_file_ >> content;
     }
 
-    ~FileDB() override {
+    ~FileDB() {
         db_file_.close();
     };
 };

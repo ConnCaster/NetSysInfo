@@ -34,7 +34,7 @@ int ListRequest::Actions() {
             return 0;
         case 1: {
             auto root_path_users = CreateRootDir("database/users/");
-            std::string new_path{root_path_users.string() + ExtractionNameJson(list_requests_[num_request - 1]) + ".json"};
+            std::string new_path{root_path_users.string() + ExtractionNameDB(list_requests_[num_request - 1]) + ".db3"};
             try {
                 std::filesystem::rename(list_requests_[num_request - 1], new_path);
             }
@@ -70,14 +70,14 @@ int ListRequest::Execute() {
     // Вывод списка
     std::cout << "\nRequests:" << std::endl;
     for (int i = 0; i < list_requests_.size(); i++) {
-        std::cout << i + 1 << ". " << ExtractionNameJson(list_requests_[i]) << std::endl;
+        std::cout << i + 1 << ". " << ExtractionNameDB(list_requests_[i]) << std::endl;
     }
 
     while (list_requests_.size() > 0 && Actions() != 0) {
         // Вывод списка
         std::cout << "\nRequests:" << std::endl;
         for (int i = 0; i < list_requests_.size(); i++) {
-            std::cout << i + 1 << ". " << ExtractionNameJson(list_requests_[i]) << std::endl;
+            std::cout << i + 1 << ". " << ExtractionNameDB(list_requests_[i]) << std::endl;
         }
     }
     if (list_requests_.size() == 0) {
