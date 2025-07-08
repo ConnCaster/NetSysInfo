@@ -11,7 +11,7 @@
 using json = nlohmann::json;
 
 constexpr unsigned int buf_size = 512;
-constexpr std::string_view kIdKey = "id_cmd";
+
 
 class Conection {
 private:

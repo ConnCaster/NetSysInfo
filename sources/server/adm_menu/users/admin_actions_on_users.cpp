@@ -52,15 +52,16 @@ int ListUsers::ActionChoise() {
     << "0. Back\n" << "1. Deleted this user\n" << "2. Send a request to the client for information\n" << ">> ";
     int decision;
     std::cin >> decision;
-
+    while (decision > 2 || decision < -1) {
+        std::cout << "\nYou have chosen an inappropriate action.: ";
+        std::cin >> decision;
+    }
     return decision;
 }
 
 // Действия со списком Пользователей
 int ListUsers::Actions() {
-    // Выбираем пользователя
     const int num_user = UserChoice();
-    // Открываем или создаем (если впервые  работаем с данным пользователем) БД пользователя
     const std::string name_user {list_users_[num_user - 1]};
     auto root_path_users_db = CreateRootDir("database/users/");
     root_path_users_db += ExtractionNameDB(name_user) + ".db3";
@@ -86,7 +87,6 @@ int ListUsers::Actions() {
                 return 1; // Удаление
             }
             case 2: {
-                // Cоздаем таблицу с очередью команд для пользователя
                 CreateBuilder create_builder;
                 CreateDirector create_director (create_builder);
                 create_director.CreateSqliteRequest(kCmdTable, list_names_columns_, list_types_columns);
@@ -102,7 +102,7 @@ int ListUsers::Actions() {
                 insert_director.CreateSqliteRequest(kCmdTable, list_names_columns_, columns_values);
                 db_user->exec(insert_builder.GetRequest()->GetRequestPlainText());
 
-                return 2;
+                return 2; // Добавление запроса для пользователя
             }
         }
     } catch (const std::exception &e) {

@@ -17,15 +17,16 @@ constexpr std::string_view kUsernameKey = "username";
 constexpr std::string_view kSerialHardDiskKey = "serial_hard_disk";
 
 // вложенные ключи в "data"
-//constexpr std::string_view kIdKey = "id_cmd";
+constexpr std::string_view kIdKey = "id_cmd";
 constexpr std::string_view kResponseKey = "response";
 
 // индификаторы команд
-constexpr int id_cmd_member_info {2};
+constexpr int kIdCmdEndSession {0};
+constexpr int kIdCmdMemberInfo {2};
 
 class ReqHandler {
 public:
-    explicit ReqHandler(const std::array<unsigned char, kBufSize>& buffer);
+    explicit ReqHandler(const nlohmann::json& j_server);
 
     json GetResponse() {
         return j_output_buffer;

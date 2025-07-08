@@ -17,9 +17,9 @@ list(APPEND ${PROJECT_NAME}_SOURCES_ADMIN_MENU
         menu.cpp
         users/users.cpp
         users/admin_actions_on_users.cpp
-        turn_on.cpp
-        turn_off.cpp
-        requests.cpp
+        turn_on/turn_on.cpp
+        turn_off/turn_off.cpp
+        requests/requests.cpp
 )
 # Реализация базы данных
 list(APPEND ${PROJECT_NAME}_SOURCES_STORAGE
@@ -34,7 +34,8 @@ add_executable(start_admin ${${PROJECT_NAME}_SOURCES_SERVER}
                             ${${PROJECT_NAME}_SOURCES_ADMIN_MENU}
                             ${${PROJECT_NAME}_SOURCES_STORAGE}
                             ${${PROJECT_NAME}_SOURCES_EXTRA}
-        )
+        requests/admin_actions_on_requests.cpp
+)
 
 # Инклуды
 target_include_directories(start_admin PUBLIC   "${CMAKE_SOURCE_DIR}/include/log"

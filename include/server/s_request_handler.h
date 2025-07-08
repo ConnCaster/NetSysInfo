@@ -5,7 +5,7 @@
 #include <nlohmann/json.hpp>
 
 constexpr unsigned int kBufSize {512};
-constexpr std::string kEmptyTable {"0"};
+constexpr int kEmptyTable {0};
 
 using json = nlohmann::json;
 
@@ -36,10 +36,10 @@ public:
 private:
     void DoHandle();
     std::string PathUserDB();
+    void SendResponse();
 private:
     json j_input_buffer_;
     json j_output_buffer_;
-    std::string cmd_check_DB_ {"SELECT EXISTS(SELECT * FROM command_queue);"};
 };
 
 #endif //CLIENT_SERVER_REQUEST_HANDLER_H

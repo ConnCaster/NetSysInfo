@@ -4,7 +4,7 @@
 #include "menu.h"
 #include "utils.h"
 
-void ListUsers::Preparing_the_list() {
+void ListUsers::PreparingTheList() {
     // Подготовка списка
     auto root_path_users = CreateRootDir("database/users/");
     std::filesystem::directory_iterator iterator = std::filesystem::directory_iterator(root_path_users);
@@ -14,9 +14,7 @@ void ListUsers::Preparing_the_list() {
     }
 }
 
-void ListUsers::Output_the_list() {
-
-    // Вывод списка
+void ListUsers::OutputTheList() {
     std::cout << "\nUsers:" << std::endl;
     for (int i = 0; i < list_users_.size(); i++) {
         std::cout << i + 1 << ". " << ExtractionNameDB(list_users_[i]) << std::endl;
@@ -26,14 +24,11 @@ void ListUsers::Output_the_list() {
 
 // Список Пользователей
 int ListUsers::Execute() {
-    Preparing_the_list();
-    Output_the_list();
+    PreparingTheList();
+    OutputTheList();
 
     while (list_users_.size() > 0 && Actions() != 0) {
-        // Вывод списка
-        std::cout << "\nUsers:" << std::endl;
-        Output_the_list();
-        Actions();
+        OutputTheList();
     }
     if (list_users_.size() == 0) {
         std::cout << "\nThe list of registration users is empty" << std::endl;

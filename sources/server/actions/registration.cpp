@@ -13,10 +13,10 @@
 using json = nlohmann::json;
 
 std::map<std::string, std::string> Registration::json_to_map(nlohmann::json &j_auth) {
+    std::string serial_hard_disk = j_auth["auth"]["serial_hard_disk"];
+    serial_hard_disk.back() = ' ';
     std::map<std::string, std::string> auth_values;
-    for (auto i : j_auth["auth"].items()) {
-        auth_values[i.key()] = i.value();
-    }
+    auth_values["Hard disk serial number"] = serial_hard_disk;
     return auth_values;
 }
 

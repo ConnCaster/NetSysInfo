@@ -18,6 +18,8 @@ class ListRequest : public Menu{
 public:
     int Execute() override;
 private:
+    void PreparingTheList();
+    void OutputTheList();
     int Actions();
     int RequestChoice();
     int ActionChoise();
@@ -29,8 +31,8 @@ class ListUsers : public Menu{
 public:
     int Execute() override;
 private:
-    void Preparing_the_list();
-    void Output_the_list();
+    void PreparingTheList();
+    void OutputTheList();
     int Actions();
     int UserChoice();
     int ActionChoise();
