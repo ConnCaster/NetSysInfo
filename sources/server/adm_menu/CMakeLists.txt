@@ -15,30 +15,28 @@ list(APPEND ${PROJECT_NAME}_SOURCES_SERVER
 # Реализация меню администратора
 list(APPEND ${PROJECT_NAME}_SOURCES_ADMIN_MENU
         menu.cpp
-        users.cpp
-        turn_on.cpp
-        turn_off.cpp
-        requests.cpp
+        users/users.cpp
+        users/admin_actions_on_users.cpp
+        turn_on/turn_on.cpp
+        turn_off/turn_off.cpp
+        requests/requests.cpp
 )
 # Реализация базы данных
 list(APPEND ${PROJECT_NAME}_SOURCES_STORAGE
-        ${CMAKE_SOURCE_DIR}/sources/storage/sql_database.cpp
-        ${CMAKE_SOURCE_DIR}/sources/storage/file_database.cpp
-        ${CMAKE_SOURCE_DIR}/sources/storage/sql_requests/create_table.cpp
+        ${CMAKE_SOURCE_DIR}/sources/storage/file_database/file_database.cpp
+        ${CMAKE_SOURCE_DIR}/sources/storage/sql_database/requests/insert.cpp
+        ${CMAKE_SOURCE_DIR}/sources/storage/sql_database/requests/select.cpp
+
 
 )
 
 add_executable(start_admin ${${PROJECT_NAME}_SOURCES_SERVER}
                             ${${PROJECT_NAME}_SOURCES_ADMIN_MENU}
                             ${${PROJECT_NAME}_SOURCES_STORAGE}
-                            ${${PROJECT_NAME}_SOURCES_EXTRA})
-
-target_link_libraries(start_admin
-        SQLiteCpp
-        sqlite3
-        pthread
-        dl
+                            ${${PROJECT_NAME}_SOURCES_EXTRA}
+        requests/admin_actions_on_requests.cpp
 )
+
 # Инклуды
 target_include_directories(start_admin PUBLIC   "${CMAKE_SOURCE_DIR}/include/log"
                                                 "${CMAKE_SOURCE_DIR}/include/utils"
@@ -51,5 +49,5 @@ target_include_directories(start_admin PUBLIC   "${CMAKE_SOURCE_DIR}/include/log
 
 )
 # Библиотеки
-target_include_directories(start_admin PUBLIC   "${CMAKE_SOURCE_DIR}/lib/JSON/include"
-)
+target_include_directories(start_admin PUBLIC "${CMAKE_SOURCE_DIR}/lib/JSON/include")
+

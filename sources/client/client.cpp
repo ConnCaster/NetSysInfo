@@ -1,10 +1,9 @@
-#include <iostream>
 #include <client.h>
 #include <thread>
 #include <arpa/inet.h>
 
 #include "cli_connection.h"
-#include "loger.h"
+#include "logger.h"
 #include "utils.h"
 
 
