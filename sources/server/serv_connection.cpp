@@ -24,8 +24,8 @@ void Conection::Recv_msg() {
         const auto req_handler_ptr {std::make_unique<ReqHandler>(input_buffer_)};
         Send_msg(req_handler_ptr->GetResponse());
     } catch (const std::exception& err)  {
-        // При втором заходе некорректный json приходит
-        int flag{};
+        server_log_.Get_log() << Time() << "[ERROR] " << err.what() << std::endl;
+
         // TODO: подумать об обработке Exception.
         //  Можно ли продолжать исполнение,
         //  если handler не сконструировался и данные не обработались
@@ -33,14 +33,11 @@ void Conection::Recv_msg() {
 }
 
 void Conection::Send_msg(const nlohmann::json &send_json) {
-    // TODO (Viktor): Сериализация строки data
-
     SetOutputBuffer(send_json.dump());
 
     if (const size_t transmitted = send(connection_socket_, output_buffer_.data(), output_buffer_.size(), 0); transmitted != output_buffer_.size()) {
     server_log_.Get_log() << Time() << "[ERROR] not all data transmitted" << std::endl;
     }
-
     Recv_msg();
 }
 

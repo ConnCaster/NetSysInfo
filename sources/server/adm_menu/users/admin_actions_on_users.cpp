@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "adm_menu/menu.h"
 #include "utils.h"
 #include "nlohmann/json.hpp"
@@ -78,7 +80,10 @@ int ListUsers::Actions() {
                 std::string command {"rm " + list_users_[num_user - 1]};
                 system(command.data());
 
-                list_users_.erase(list_users_.begin() + (num_user-1));
+
+                auto new_end = std::remove(list_users_.begin(), list_users_.end(), list_users_[num_user - 1]);
+                list_users_.erase(new_end, list_users_.end());
+
                 DropBuilder drop_builder;
                 DropDirector drop_director(drop_builder);
                 drop_director.CreateSqliteRequest(kCmdTable);
@@ -95,7 +100,7 @@ int ListUsers::Actions() {
                 // Выбираем нужную команду
                 int number_cmd = RequestChoice();
                 std::string key_name_cmd = ReturnNameCmd(number_cmd);
-                std::pair<std::string, std::string> columns_values {key_name_cmd, std::to_string(number_cmd)};
+                std::pair<std::string, int> columns_values {key_name_cmd, number_cmd};
                 // И отправляем ее в БД
                 InsertBuilder insert_builder;
                 InsertDirector insert_director(insert_builder);

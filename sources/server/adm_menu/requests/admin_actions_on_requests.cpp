@@ -1,4 +1,5 @@
 #include <filesystem>
+#include <algorithm>
 
 #include "utils.h"
 #include "adm_menu/menu.h"
@@ -40,7 +41,8 @@ int ListRequest::Actions() {
                 std::cerr << "Error during user registration" << std::endl;
             }
 
-            list_requests_.erase(list_requests_.begin() + (num_request - 1));
+            auto end_element = std::remove(list_requests_.begin(), list_requests_.end(), list_requests_[num_request-1]);
+            list_requests_.erase(end_element);
 
             return 1; // Регистрация
         }
@@ -48,7 +50,9 @@ int ListRequest::Actions() {
             std::string command{"rm " + list_requests_[num_request - 1]};
             system(command.data());
 
-            list_requests_.erase(list_requests_.begin() + (num_request - 1));
+
+            auto end_element = std::remove(list_requests_.begin(), list_requests_.end(), list_requests_[num_request-1]);
+            list_requests_.erase(end_element);
 
             return 1; // Удаление
         }
