@@ -26,7 +26,7 @@ public:
 
 class CreateAction {
 public:
-    static std::unique_ptr<Action> CreateAct(int id_cmd) {
+    static std::unique_ptr<Action> CreateAct(const int id_cmd) {
         switch (id_cmd) {
             case 0:
                 return std::make_unique<ClientTurnOff>();
@@ -34,6 +34,7 @@ public:
                 return std::make_unique<Authentication>();
             case 2:
                 return std::make_unique<MemberInfo>();
+            default: ;
         }
     }
 };

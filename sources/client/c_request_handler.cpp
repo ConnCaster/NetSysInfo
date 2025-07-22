@@ -9,8 +9,7 @@ ReqHandler::ReqHandler(const nlohmann::json& j_server)
 }
 
 void ReqHandler::DoHandle() {
-    std::string id_key = j_input_buffer_[kIdKey];
-    const auto action = CreateAction::CreateAct(std::stoi(id_key));
+    const auto action = CreateAction::CreateAct(j_input_buffer_[kIdKey]);
     json j_response = action->execute();
 
     json j_resp = json::object({{"id_cmd", j_input_buffer_[kIdKey]}, {"response", j_response[kResponseKey]}});

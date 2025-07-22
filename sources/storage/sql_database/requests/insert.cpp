@@ -10,6 +10,6 @@ std::string Insert::GetRequestPlainText() {
     request_.back() = ')';
 
     request_ += " " + std::string("VALUES") + "(";
-    request_ += " '" + values_.second + "', '" + values_.first + "' )";
+    request_ += " '" + std::to_string(values_.second) + "', '" + values_.first + "' )";
     return request_;
 }

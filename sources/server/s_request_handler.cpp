@@ -1,10 +1,11 @@
 #include <iostream>
 
 #include "utils.h"
-#include "s_factory.h"
+#include "create_action.h"
 #include "serv_connection.h"
 #include "s_request_handler.h"
 
+#include "check_registration.h"
 #include "sql_database/builders/select_builder.h"
 #include "sql_database/directors/select_director.h"
 #include "SQLiteCpp/Database.h"
@@ -48,7 +49,7 @@ void ReqHandler::SendResponse() {
 
             query.executeStep();
             j_output_buffer_[kResponseKey] = query.getColumn(0).getString();
-            j_output_buffer_[kIdKey]= query.getColumn(1).getString();
+            j_output_buffer_[kIdKey]= query.getColumn(1).getInt();
 
             db_user->exec("DELETE FROM commands_table WHERE rowid = (SELECT rowid FROM commands_table LIMIT 1);");
         }
@@ -61,17 +62,23 @@ void ReqHandler::SendResponse() {
 
 void ReqHandler::DoHandle() {
     if (!j_input_buffer_.contains(kDataKey)) {
-        const auto action = CreateAction::CreateAct(id_cmd_registration);
-        if (action->execute(j_input_buffer_)) {
+        CheckRegistration check_registration(j_input_buffer_);
+
+        if (!check_registration.IfRegistration()) {
+            const auto action = CreateAction::CreateAct(id_cmd_registration);
+            action->execute(j_input_buffer_);
             j_output_buffer_[kResponseKey] = "Your registration request has been accepted";
         } else {
             SendResponse();
         }
-    } else {
-        std::string str_tmp = j_input_buffer_["data"]["id_cmd"];
-        const auto action = CreateAction::CreateAct(std::stoi(str_tmp));
-        action->execute(j_input_buffer_);
 
-        SendResponse();
+    } else {
+        if (j_input_buffer_["data"]["id_cmd"] == 0) {
+            return;
+        } else {
+            const auto action = CreateAction::CreateAct(j_input_buffer_["data"]["id_cmd"]);
+            action->execute(j_input_buffer_);
+            SendResponse();
+        }
     }
 }

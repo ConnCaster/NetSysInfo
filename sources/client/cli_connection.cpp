@@ -58,7 +58,7 @@ void Conection::SendMsg(const json &j_send) {
             client_log_.Get_log() << Time() << "[ERROR] not all data transmitted" << std::endl;
         }
 
-        if (j_send.contains(kIdKey) == kIdCmdEndSession) {
+        if (j_send.contains(kIdKey) && j_send[kIdKey] == kIdCmdEndSession) {
             client_log_.Get_log() << Time() << "[Server] There are no requests for your profile in the queue" << std::endl;
             return;
         } else {
